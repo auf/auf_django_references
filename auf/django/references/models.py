@@ -28,6 +28,7 @@ class Employe(models.Model):
     class Meta:
         db_table = u'ref_employe'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return u"%s, %s [%d]" % (self.nom, self.prenom, self.id)
@@ -42,6 +43,7 @@ class Authentification(models.Model):
     class Meta:
         db_table = u'ref_authentification'
         ordering = ['id']
+        managed = False
 
     def __unicode__(self):
         return u"%s [%d]" % (self.courriel, self.id)
@@ -56,6 +58,7 @@ class Service(models.Model):
     class Meta:
         db_table = u'ref_service'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return "%s (%s)" % (self.nom, self.id)
@@ -69,6 +72,7 @@ class PosteType(models.Model):
 
     class Meta:
         db_table = u'ref_poste_type'
+        managed = False
 
     def __unicode__(self):
         return "%s (%s)" % (self.nom, self.id)
@@ -80,6 +84,7 @@ class GroupeArh(models.Model):
 
     class Meta:
         db_table = u'ref_groupe_arh'
+        managed = False
 
 class GroupeDirRegion(models.Model):
     id = models.AutoField(primary_key=True)
@@ -89,6 +94,7 @@ class GroupeDirRegion(models.Model):
 
     class Meta:
         db_table = u'ref_groupe_dir_region'
+        managed = False
 
 class GroupeAdmRegion(models.Model):
     id = models.AutoField(primary_key=True)
@@ -98,6 +104,7 @@ class GroupeAdmRegion(models.Model):
 
     class Meta:
         db_table = u'ref_groupe_adm_region'
+        managed = False
 
 class GroupeRespImplantation(models.Model):
     id = models.AutoField(primary_key=True)
@@ -108,6 +115,7 @@ class GroupeRespImplantation(models.Model):
 
     class Meta:
         db_table = u'ref_groupe_resp_implantation'
+        managed = False
 
 class GroupeDirProgramme(models.Model):
     id = models.AutoField(primary_key=True)
@@ -117,6 +125,7 @@ class GroupeDirProgramme(models.Model):
 
     class Meta:
         db_table = u'ref_groupe_dir_programme'
+        managed = False
 
 class GroupeDirDelegProgrammeReg(models.Model):
     id = models.AutoField(primary_key=True)
@@ -126,6 +135,7 @@ class GroupeDirDelegProgrammeReg(models.Model):
 
     class Meta:
         db_table = u'ref_groupe_dir_deleg_programme_reg'
+        managed = False
 
 class GroupeComptable(models.Model):
     id = models.AutoField(primary_key=True)
@@ -134,6 +144,7 @@ class GroupeComptable(models.Model):
 
     class Meta:
         db_table = u'ref_groupe_comptable'
+        managed = False
 
 class GroupeComptableRegional(models.Model):
     id = models.AutoField(primary_key=True)
@@ -142,6 +153,7 @@ class GroupeComptableRegional(models.Model):
 
     class Meta:
         db_table = u'ref_groupe_comptable_regional'
+        managed = False
 
 class GroupeComptableLocal(models.Model):
     id = models.AutoField(primary_key=True)
@@ -150,6 +162,7 @@ class GroupeComptableLocal(models.Model):
 
     class Meta:
         db_table = u'ref_groupe_comptable_local'
+        managed = False
 
 class Pays(models.Model):
     """Pays (donnée de référence, source: SQI).
@@ -173,6 +186,7 @@ class Pays(models.Model):
         ordering = ['nom']
         verbose_name = u"pays"
         verbose_name_plural = u"pays"
+        managed = False
 
     def __unicode__(self):
         return "%s (%s)" % (self.nom, self.code)
@@ -194,6 +208,7 @@ class Region(models.Model):
         ordering = ['nom']
         verbose_name = u"région"
         verbose_name_plural = u"régions"
+        managed = False
 
     def __unicode__(self):
         return "%s (%s)" % (self.nom, self.code)
@@ -222,6 +237,7 @@ class Bureau(models.Model):
         ordering = ['nom']
         verbose_name = u"bureau"
         verbose_name_plural = u"bureaux"
+        managed = False
 
     def __unicode__(self):
         return "%s (%s)" % (self.nom, self.code)
@@ -244,6 +260,7 @@ class Discipline(models.Model):
     class Meta:
         db_table = u'ref_discipline'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return "%s - %s" % (self.code, self.nom)
@@ -290,6 +307,7 @@ class Etablissement(models.Model):
     class Meta:
         db_table = u'ref_etablissement'
         ordering = ['pays__nom', 'nom']
+        managed = False
 
     def __unicode__(self):
         return "%s - %s (%d)" % (self.pays.nom, self.nom, self.id)
@@ -372,6 +390,7 @@ class Implantation(models.Model):
             def get_query_set(self):
                 return super(Implantation.Managers.Actifs, self).get_query_set().filter(actif=True)
 
+    objects = models.Manager()
     ouvertes = Managers.Ouvertes()
     actifs = Managers.Actifs()
     actives = actifs
@@ -379,6 +398,7 @@ class Implantation(models.Model):
     class Meta:
         db_table = u'ref_implantation'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return "%s (%d)" % (self.nom, self.id)
@@ -399,6 +419,7 @@ class Programme(models.Model):
 
     class Meta:
         db_table = u'ref_programme'
+        managed = False
 
     def __unicode__(self):
         return "%s - %s" % (self.code, self.nom)
@@ -433,6 +454,7 @@ class Projet(models.Model):
     class Meta:
         db_table = u'ref_projet'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return "%s - %s" % (self.code, self.nom)
@@ -452,6 +474,7 @@ class ProjetComposante(models.Model):
     class Meta:
         db_table = u'ref_projet_composante'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return "%s - %s" % (self.code, self.nom)
@@ -468,6 +491,7 @@ class UniteProjet(models.Model):
     class Meta:
         db_table = u'ref_unite_projet'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return "%s - %s" % (self.code, self.nom)
@@ -482,6 +506,7 @@ class ObjectifSpecifique(models.Model):
     class Meta:
         db_table = u'ref_objectif_specifique'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return "%s - %s" % (self.id, self.nom)
@@ -496,6 +521,7 @@ class ObjectifStrategique(models.Model):
     class Meta:
         db_table = u'ref_objectif_strategique'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return "%s - %s" % (self.id, self.nom)
@@ -509,6 +535,7 @@ class Thematique(models.Model):
     class Meta:
         db_table = u'ref_thematique'
         ordering = ['nom']
+        managed = False
 
     def __unicode__(self):
         return "%s - %s" % (self.id, self.nom)
@@ -523,6 +550,9 @@ class ProjetUp(models.Model):
     nom_court = models.CharField(max_length=255, blank=True)
     # meta
     actif = models.BooleanField()
+
+    class Meta:
+        managed = False
 
 class Poste(models.Model):
     """ ATTENTION: DÉSUET
@@ -539,6 +569,7 @@ class Poste(models.Model):
 
     class Meta:
         db_table = u'ref_poste'
+        managed = False
 
     def __unicode__(self):
         return "%s - %s (%s)" % (self.code, self.nom, self.type)
@@ -561,6 +592,7 @@ class ProjetPoste(models.Model):
 
     class Meta:
         db_table = u'ref_projet_poste'
+        managed = False
 
     def __unicode__(self):
         return "%s" % (self.code)
