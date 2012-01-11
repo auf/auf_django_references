@@ -1,0 +1,10 @@
+0.4 (2012-01-11)
+----------------
+
+* Ajout de la management command "sync_references" pour la création des vues
+  vers les tables de datamaster
+
+0.3 (2011-12-08)
+----------------
+
+* Renommage de datamaster_modeles en auf.django.references
