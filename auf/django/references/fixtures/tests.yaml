@@ -1,0 +1,29 @@
+- model: managedref.region
+  pk: 1
+  fields:
+    code: A
+    nom: Amériques
+- model: managedref.region
+  pk: 2
+  fields:
+    code: EO
+    nom: "Europe de l'Ouest"
+- model: managedref.pays
+  pk: 1
+  fields:
+    code: CA
+    code_iso3: CAN
+    nom: Canada
+    region: 1
+- model: managedref.pays
+  pk: 2
+  fields:
+    code: FR
+    code_iso3: FRA
+    nom: France
+    region: 2
+- model: managedref.etablissement
+  pk: 1
+  fields:
+    nom: "Université de Montréal"
+    pays: CA

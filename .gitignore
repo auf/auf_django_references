@@ -1,4 +1,11 @@
-/dist
+/.installed.cfg
+/bin
 /build
+/develop-eggs
+/dist
+/doc/_build
+/eggs
+/parts
+/tests.sqlite
 *.pyc
 *.egg-info

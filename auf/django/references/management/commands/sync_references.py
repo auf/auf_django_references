@@ -1,18 +1,20 @@
 # encoding: utf-8
 
 from django.core.management.base import BaseCommand
-from django.db import connection
 from django.db.models import get_models
+
+from auf.django.references import models as ref
 
 class Command(BaseCommand):
     help = 'Synchronise les données de références AUF'
 
     def handle(self, *args, **options):
-        cursor = connection.cursor()
         for model in get_models():
-            if model.__module__ == 'auf.django.references.models':
-                table_name = model._meta.db_table
-                cursor.execute(
-                    'CREATE OR REPLACE VIEW `%s` AS SELECT * FROM datamaster.`%s`' % 
-                    (table_name, table_name)
-                )
+            if issubclass(model, ref.EtablissementBase):
+                self.stdout.write('Mise à jour de %s.%s...\n' %
+                                  (model._meta.app_label, model.__class__.__name__))
+                for obj in model._default_manager.exclude(ref=None):
+                    for f in obj.ref._meta.fields:
+                        if f.name != 'id':
+                            setattr(obj, f.attname, getattr(obj.ref, f.attname))
+                    obj.save()

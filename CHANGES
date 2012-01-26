@@ -1,3 +1,15 @@
+0.5 (2012-01-26)
+----------------
+
+* Retrait des related_name pour les champs 'pays', 'region' et 'implantation' du
+  modèle Etablissement.
+
+* Retrait du champ code_implantation du modèle Etablissement.
+
+* Mécanique pour gérer des tables locales d'établissements
+
+* Ajout de tests et de documentation
+
 0.4 (2012-01-11)
 ----------------
 
