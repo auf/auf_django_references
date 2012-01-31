@@ -3,7 +3,10 @@ from django import forms
 from auf.django.references import models as ref
 
 class EtablissementForm(forms.ModelForm):
-    nom = forms.CharField(widget=forms.TextInput(attrs={'class': 'etablissement-autocomplete'}))
+    nom = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'etablissement-autocomplete',
+        'autocomplete': 'off'
+    }))
 
     class Meta:
         model = ref.EtablissementBase
