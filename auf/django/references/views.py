@@ -23,4 +23,6 @@ def etablissement_json(request, id):
     result = {}
     for f in etablissement._meta.fields:
         result[f.name] = getattr(etablissement, f.attname)
-    return HttpResponse(simplejson.dumps(result), mimetype='application/json')
+    json = simplejson.dumps(result,
+                            default=lambda obj: obj.isoformat if hasattr(obj, 'isoformat') else '')
+    return HttpResponse(json, mimetype='application/json')

@@ -8,7 +8,7 @@ class UniversiteForm(EtablissementForm):
 
     class Meta(EtablissementForm.Meta):
         model = Universite
-        fields = ('nom', 'pays', 'region', 'ville', 'recteur', 'ref')
+        fields = ('nom', 'pays', 'region', 'ville', 'membre', 'membre_adhesion_date', 'recteur', 'ref')
 
 class UniversiteAdmin(admin.ModelAdmin):
     form = UniversiteForm

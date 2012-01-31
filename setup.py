@@ -13,4 +13,5 @@ setup(name=name,
       url='http://pypi.auf.org/%s' % name,
       license='GPL',
       packages=find_packages(),
+      zip_safe=False,
      )

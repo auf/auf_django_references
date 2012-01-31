@@ -1,72 +1,50 @@
 $(function() {
 
-    function etablissement_autocomplete(request, response) {
-        var form = $(this.form);
-        var pays = form.data('etablissement.critere_pays');
-        if (pays) {
-            request.pays = $(pays).val();
-        }
-        $.getJSON('/references/autocomplete/etablissements.json', request, response);
-    }
-
-    function etablissement_select(event, ui) {
-        var form = $(this.form);
-        form.find('[name=ref]').val(ui.item.id);
-        ref_changed(form);
-    }
-
-    function etablissement_change(event, ui) {
-        var form = $(this.form);
-        if (form.data('etablissement.nom_ref') != $(this).val()) {
-            form.find('[name=ref]').val('');
-            ref_changed(form);
-        }
-    }
-
-    function pays_change(event) {
-        var form = $(this.form);
-        var ref = form.find('[name=ref]');
-        if (ref.val()) {
-            ref.val('');
-            form.find('[name=nom]').val('');
-            ref_changed(form);
-        }
-    }
-
-    function ref_changed(form) {
-        var id = form.find('[name=ref]').val();
-        if (id) {
-            var critere_pays = form.data('etablissement.critere_pays');
-            $.get('/references/etablissements/' + id + '.json', function(data) {
-                var disabled_fields = [];
-                for (field in data) {
-                    if (field == 'id' || (critere_pays && field == 'pays')) {
-                        continue;
-                    }
-                    if (field == 'nom') {
-                        form.data('etablissement.nom_ref', data[field]);
+    function set_ref_etablissement(form, id) {
+        form.find('[name=ref]').val(id);
+        $.get('/references/etablissements/' + id + '.json', function(data) {
+            for (field in data) {
+                if (field != 'id') {
+                    var widget = form.find('[name=' + field + ']');
+                    var value = $('<span class="etablissement-value"></span>');
+                    value.insertBefore(widget);
+                    if (widget.is(':checkbox')) {
+                        value.append('<img src="/static/references/icon-' +
+                                     (data[field] ? 'yes' : 'no') + '.gif" alt="' +
+                                     (data[field] ? 'oui' : 'non') + '/>');
+                        widget.attr('checked', data[field]);
                     }
                     else {
-                        var widget = form.find('[name=' + field + ']');
-                        if (widget.is(':checkbox')) {
-                            widget.attr('checked', data[field]);
+                        value.insertBefore(widget);
+                        if (widget.is('select')) {
+                            value.append(widget.find('option[value=' + data[field] + ']').text());
                         }
                         else {
-                            widget.val(data[field]);
+                            value.append(data[field]);
                         }
-                        widget.attr('disabled', true);
-                        disabled_fields.push(field);
+                        widget.val(data[field]);
                     }
+
+                    if (field == 'nom') {
+                        var button = $(
+                            '<button type="button" class="etablissement-change-button">Modifier</button>'
+                        );
+                        value.append(' ');
+                        button.appendTo(value);
+                        button.click(function() { unset_ref_etablissement(form); })
+                    }
+                    widget.addClass('etablissement-hidden').hide();
+                    widget.next('.add-another,.datetimeshortcuts').addClass('etablissement-hidden').hide();
                 }
-                form.data('etablissement.disabled_fields', disabled_fields);
-            });
-        }
-        else {
-            $.each(form.data('etablissement.disabled_fields'), function() {
-                form.find('[name=' + this + ']').attr('disabled', false);
-            });
-            form.data('etablissement.nom_ref', '');
-        }
+            }
+        });
+    }
+
+    function unset_ref_etablissement(form) {
+        form.find('[name=ref]').val('');
+        form.find('[name=nom]').val('');
+        form.find('.etablissement-value').remove();
+        form.find('.etablissement-hidden').show();
     }
 
     $('input.etablissement-autocomplete').each(function() {
@@ -87,31 +65,29 @@ $(function() {
         var pays_input = all_inputs.filter('[name=pays]');
         var pays_index = all_inputs.index(pays_input);
         var my_index = all_inputs.index(this);
+        var critere_pays = false;
         if (pays_index != -1 && pays_index < my_index) {
-            form.data('etablissement.critere_pays', pays_input.get());
-            pays_input.change(pays_change);
+            var critere_pays = pays_input.get();
         }
-        else {
-            form.data('etablissement.critere_pays', false);
-        }
-
-        // Réactiver les champs désactivés juste avant la soumission
-        form.data('etablissement.disabled_fields', []);
-        form.on('submit.etablissement', function() {
-            $.each($(this).data('etablissement.disabled_fields'), function() {
-                form.find('[name=' + this + ']').attr('disabled', false);
-            });
-        });
 
         // Pré-remplir les champs si une référence est déjà indiquée
-        ref_changed(form);
+        var ref_id = form.find('[name=ref]').val();
+        if (ref_id) {
+            set_ref_etablissement(form, ref_id);
+        }
 
         // Mettre en place l'autocomplete
         $(this).autocomplete({
-            source: etablissement_autocomplete,
-            select: etablissement_select
+            source: function(request, response) {
+                if (critere_pays) {
+                    request.pays = $(critere_pays).val();
+                }
+                $.getJSON('/references/autocomplete/etablissements.json', request, response);
+            },
+            select: function(event, ui) {
+                set_ref_etablissement(form, ui.item.id)
+            }
         });
-        $(this).change(etablissement_change);
     });
 
 });
