@@ -423,7 +423,8 @@ class Etablissement(managedref.Etablissement):
 ### Modèles abstraits
 
 class EtablissementBase(managedref.EtablissementBase):
-    ref = models.ForeignKey(Etablissement, blank=True, null=True)
+    ref = models.OneToOneField(Etablissement, blank=True, null=True,
+                               related_name='%(app_label)s_%(class)s')
 
     class Meta:
         abstract = True

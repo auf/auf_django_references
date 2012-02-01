@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponse
 from django.utils import simplejson
 
@@ -5,8 +6,15 @@ from auf.django.references import models as ref
 
 def autocomplete_etablissements(request):
     term = request.GET.get('term')
+    exclude_refs = request.GET.get('exclude_refs')
+    include = request.GET.get('include')
     if term:
         etablissements = ref.Etablissement.objects.filter(nom__icontains=term)
+        if exclude_refs:
+            q = Q(**{str(exclude_refs): None})
+            if include:
+                q |= Q(id=include)
+            etablissements = etablissements.filter(q)
         pays = request.GET.get('pays')
         if pays:
             etablissements = etablissements.filter(pays=pays)

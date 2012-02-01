@@ -1,4 +1,4 @@
-$(function() {
+(function($) {
 
     function set_ref_etablissement(form, id) {
         form.find('[name=ref]').val(id);
@@ -27,14 +27,18 @@ $(function() {
 
                     if (field == 'nom') {
                         var button = $(
-                            '<button type="button" class="etablissement-change-button">Modifier</button>'
+                            '<button type="button" class="etablissement-change-button">' +
+                            'Modifier</button>'
                         );
                         value.append(' ');
                         button.appendTo(value);
                         button.click(function() { unset_ref_etablissement(form); })
                     }
                     widget.addClass('etablissement-hidden').hide();
-                    widget.next('.add-another,.datetimeshortcuts').addClass('etablissement-hidden').hide();
+                    widget
+                        .next('.add-another,.datetimeshortcuts')
+                        .addClass('etablissement-hidden')
+                        .hide();
                 }
             }
         });
@@ -47,8 +51,9 @@ $(function() {
         form.find('.etablissement-hidden').show();
     }
 
-    $('input.etablissement-autocomplete').each(function() {
-        var form = $(this.form);
+    $.fn.etablissement_autocomplete = function(exclude_refs) {
+
+        var form = this.closest('form');
 
         // Cacher le champ ref et son label
         var ref_field = form.find('[name=ref]');
@@ -77,10 +82,16 @@ $(function() {
         }
 
         // Mettre en place l'autocomplete
-        $(this).autocomplete({
+        this.autocomplete({
             source: function(request, response) {
                 if (critere_pays) {
                     request.pays = $(critere_pays).val();
+                }
+                if (exclude_refs) {
+                    request.exclude_refs = exclude_refs;
+                }
+                if (ref_id) {
+                    request.include = ref_id;
                 }
                 $.getJSON('/references/autocomplete/etablissements.json', request, response);
             },
@@ -88,6 +99,7 @@ $(function() {
                 set_ref_etablissement(form, ui.item.id)
             }
         });
-    });
 
-});
+    }
+
+})(jQuery);
