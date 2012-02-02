@@ -10,6 +10,10 @@
 
 * Ajout de tests et de documentation
 
+* La création des vues vers les tables de datamaster se fait maintenant sur le
+  syncdb. La commande sync_references sert, pour l'instant à synchroniser les
+  tables locales d'établissements.
+
 0.4 (2012-01-11)
 ----------------
 
