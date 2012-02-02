@@ -1,0 +1,7 @@
+<h1>Universités</h1>
+
+<ul>
+  {% for universite in universite_list %}
+  <li><a href="{% url universite_update pk=universite.pk %}">{{ universite }}</a></li>
+  {% endfor %}
+</ul>

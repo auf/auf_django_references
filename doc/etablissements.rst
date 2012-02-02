@@ -92,3 +92,21 @@ dans la configuration de l'admin::
         form = UniversiteForm
 
     admin.register(Universite, UniversiteForm)
+
+On peut aussi utiliser le formulaire ailleurs. Dans ce cas, il faudra penser à
+inclure les "media" associés pour que le javascript fonctionne. Par exemple:
+
+.. code-block:: html+django
+
+    <html>
+      <head>
+        {{ form.media }}
+      </head>
+      <body>
+        <form action="" method="post">
+          <table>
+            {{ form }}
+          </table>
+        </form>
+      </body>
+    </html>

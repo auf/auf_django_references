@@ -1,3 +1,5 @@
+import os
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -20,3 +22,5 @@ INSTALLED_APPS = (
 ROOT_URLCONF = 'tests.urls'
 DEBUG = True
 STATIC_URL = '/static/'
+
+TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
