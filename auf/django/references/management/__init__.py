@@ -2,11 +2,12 @@
 
 from django.db import connection
 from django.db.models import get_models, signals
+from django.conf import settings
 
 import auf.django.references.models
 
 def post_syncdb(sender, **kwargs):
-    if connection.vendor == 'mysql':
+    if 'auf.django.references.managedref' not in settings.INSTALLED_APPS:
         print u'Création des vues pour les données de référence...'
         cursor = connection.cursor()
         for model in get_models():

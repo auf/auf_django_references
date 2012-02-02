@@ -12,7 +12,7 @@ class Command(BaseCommand):
         for model in get_models():
             if issubclass(model, ref.EtablissementBase):
                 self.stdout.write('Mise à jour de %s.%s...\n' %
-                                  (model._meta.app_label, model.__class__.__name__))
+                                  (model._meta.app_label, model.__name__))
                 for obj in model._default_manager.exclude(ref=None):
                     for f in obj.ref._meta.fields:
                         if f.name != 'id':
