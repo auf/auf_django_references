@@ -1,3 +1,9 @@
+0.6 (2012-02-03)
+----------------
+
+* Bugfix: le packaging de 0.5 ne contenait pas les css et les js. En plus il
+  installait le package tests.
+
 0.5 (2012-01-26)
 ----------------
 
