@@ -3,6 +3,382 @@
 from django.db import models
 
 
+class Employe(models.Model):
+    """Personne en contrat d'employé (CDD ou CDI) à l'AUF
+    """
+    id = models.IntegerField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    prenom = models.CharField(max_length=255)
+    implantation = models.ForeignKey(to='Implantation', db_column='implantation', related_name='lieu_travail_theorique_de')    # SGRH
+    implantation_physique = models.ForeignKey(to='Implantation', db_column='implantation_physique', related_name='lieu_travail_reel_de')
+    courriel = models.CharField(max_length=255, null=True, blank=True)
+    genre = models.CharField(max_length=3)
+    fonction = models.CharField(max_length=255, null=True, blank=True)
+    telephone_poste = models.CharField(max_length=255, null=True, blank=True)
+    telephone_ip = models.CharField(max_length=255, null=True, blank=True)
+    responsable = models.ForeignKey(to='Employe', db_column='responsable', related_name='responsable_de', null=True, blank=True)
+    mandat_debut = models.DateField(null=True, blank=True)
+    mandat_fin = models.DateField(null=True, blank=True)
+    date_entree = models.DateField(null=True, blank=True)
+    service = models.ForeignKey('Service', db_column='service')
+    poste_type_1 =  models.ForeignKey('PosteType', null=True, blank=True, db_column='poste_type_1', related_name='poste_type_1')
+    poste_type_2 =  models.ForeignKey('PosteType', null=True, blank=True, db_column='poste_type_2', related_name='poste_type_2')
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_employe'
+        ordering = ['nom']
+
+    def __unicode__(self):
+        return u"%s, %s [%d]" % (self.nom, self.prenom, self.id)
+
+
+class Authentification(models.Model):
+    """Authentification"""
+    id = models.ForeignKey('Employe', primary_key=True, db_column='id')
+    courriel = models.CharField(max_length=255, unique=True)
+    motdepasse = models.CharField(max_length=255)
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_authentification'
+        ordering = ['id']
+
+    def __unicode__(self):
+        return u"%s [%d]" % (self.courriel, self.id)
+
+
+class Service(models.Model):
+    """Services (donnée de référence, source: SGRH).
+    """
+    id = models.IntegerField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_service'
+        ordering = ['nom']
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.nom, self.id)
+
+
+class PosteType(models.Model):
+    """Postes types (donnée de référence, source: SGRH).
+    """
+    id = models.IntegerField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_poste_type'
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.nom, self.id)
+
+
+class GroupeArh(models.Model):
+    id = models.AutoField(primary_key=True)
+    employe = models.ForeignKey('Employe', db_column='employe')
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_groupe_arh'
+
+
+class GroupeDirRegion(models.Model):
+    id = models.AutoField(primary_key=True)
+    employe = models.ForeignKey('Employe', db_column='employe')
+    region = models.ForeignKey('Region', db_column='region')
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_groupe_dir_region'
+
+
+class GroupeAdmRegion(models.Model):
+    id = models.AutoField(primary_key=True)
+    employe = models.ForeignKey('Employe', db_column='employe')
+    region = models.ForeignKey('Region', db_column='region')
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_groupe_adm_region'
+
+
+class GroupeRespImplantation(models.Model):
+    id = models.AutoField(primary_key=True)
+    employe = models.ForeignKey('Employe', db_column='employe')
+    implantation = models.ForeignKey('Implantation', db_column='implantation')
+    type = models.CharField(max_length=255, blank=True, null=True)
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_groupe_resp_implantation'
+
+
+class GroupeDirProgramme(models.Model):
+    id = models.AutoField(primary_key=True)
+    employe = models.ForeignKey('Employe', db_column='employe')
+    service = models.ForeignKey('Service', db_column='service')
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_groupe_dir_programme'
+
+
+class GroupeDirDelegProgrammeReg(models.Model):
+    id = models.AutoField(primary_key=True)
+    employe = models.ForeignKey('Employe', db_column='employe')
+    region = models.ForeignKey('Region', db_column='region')
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_groupe_dir_deleg_programme_reg'
+
+
+class GroupeComptable(models.Model):
+    id = models.AutoField(primary_key=True)
+    employe = models.ForeignKey('Employe', db_column='employe')
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_groupe_comptable'
+
+
+class GroupeComptableRegional(models.Model):
+    id = models.AutoField(primary_key=True)
+    employe = models.ForeignKey('Employe', db_column='employe')
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_groupe_comptable_regional'
+
+
+class GroupeComptableLocal(models.Model):
+    id = models.AutoField(primary_key=True)
+    employe = models.ForeignKey('Employe', db_column='employe')
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_groupe_comptable_local'
+
+
+class Discipline(models.Model):
+    """ ATTENTION: DÉSUET
+    Discipline (donnée de référence, source: SQI).
+    Une discipline est une catégorie de savoirs scientifiques.
+    Le conseil scientifique fixe la liste des disciplines.
+    """
+
+    id = models.IntegerField(primary_key=True)
+    code = models.CharField(max_length=255, unique=True)
+    nom = models.CharField(max_length=255)
+    nom_long = models.CharField(max_length=255, blank=True)
+    nom_court = models.CharField(max_length=255, blank=True)
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_discipline'
+        ordering = ['nom']
+
+    def __unicode__(self):
+        return "%s - %s" % (self.code, self.nom)
+
+
+class Programme(models.Model):
+    """ ATTENTION: DÉSUET
+    Programme (donnée de référence, source: SQI).
+    Structure interne par laquelle l'AUF exécute ses projets et activités, dispense ses produits et ses services.
+    """
+
+    id = models.IntegerField(primary_key=True)
+    code = models.CharField(max_length=255, unique=True)
+    nom = models.CharField(max_length=255)
+    nom_long = models.CharField(max_length=255, blank=True)
+    nom_court = models.CharField(max_length=255, blank=True)
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_programme'
+
+    def __unicode__(self):
+        return "%s - %s" % (self.code, self.nom)
+
+
+#PROGRAMMATION QUADRIENNALLE
+
+class Projet(models.Model):
+    """Projet (donnée de référence, source: programmation-quadriennalle).
+    """
+    SERVICE_CHOICES = (
+        ('1', "Direction de la langue et de la communication scientifique en français"),
+        ('2', "Direction du développement et de la valorisation"),
+        ('3', "Direction de l'innovation pédagogique et de l'économie de la connaissance"),
+        ('4', "Direction du renforcement des capacités scientifiques"),
+    )
+
+    id = models.IntegerField(primary_key=True)
+    code = models.CharField(max_length=255, unique=True)
+    nom = models.CharField(max_length=255)
+    presentation = models.TextField(null=True, blank=True)
+    partenaires = models.TextField(null=True, blank=True)
+    service = models.CharField(max_length=255, choices=SERVICE_CHOICES, blank=True, null=True)
+    objectif_specifique = models.ForeignKey('ObjectifSpecifique', blank=True, null=True, db_column='objectif_specifique')
+    implantation = models.ForeignKey('Implantation', null=True, blank=True, db_column='implantation')
+    etablissement = models.ForeignKey('Etablissement', null=True, blank=True, db_column='etablissement')
+    date_debut = models.DateField(null=True, blank=True)
+    date_fin = models.DateField(null=True, blank=True)
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_projet'
+        ordering = ['nom']
+
+    def __unicode__(self):
+        return "%s - %s" % (self.code, self.nom)
+
+
+class ProjetComposante(models.Model):
+    """Composantes des projets (source: programmation-quadriennalle)
+    """
+    id = models.IntegerField(primary_key=True)
+    code = models.CharField(max_length=10)
+    nom = models.CharField(max_length=255)
+    nom_court = models.CharField(max_length=255, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    projet = models.ForeignKey('Projet', db_column='projet')
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_projet_composante'
+        ordering = ['nom']
+
+    def __unicode__(self):
+        return "%s - %s" % (self.code, self.nom)
+
+
+class UniteProjet(models.Model):
+    """Unités de projet (source: programmation-quadriennalle)
+    """
+    id = models.IntegerField(primary_key=True)
+    code = models.CharField(max_length=10, unique=True)
+    nom = models.CharField(max_length=255)
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_unite_projet'
+        ordering = ['nom']
+
+    def __unicode__(self):
+        return "%s - %s" % (self.code, self.nom)
+
+
+class ObjectifSpecifique(models.Model):
+    id = models.IntegerField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    objectif_strategique = models.ForeignKey('ObjectifStrategique', db_column='objectif_strategique')
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_objectif_specifique'
+        ordering = ['nom']
+
+    def __unicode__(self):
+        return "%s - %s" % (self.id, self.nom)
+
+
+class ObjectifStrategique(models.Model):
+    id = models.IntegerField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_objectif_strategique'
+        ordering = ['nom']
+
+    def __unicode__(self):
+        return "%s - %s" % (self.id, self.nom)
+
+
+class Thematique(models.Model):
+    id = models.IntegerField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_thematique'
+        ordering = ['nom']
+
+    def __unicode__(self):
+        return "%s - %s" % (self.id, self.nom)
+
+
+class ProjetUp(models.Model):
+    """Projet-unité de projet (source: coda)
+       => codes budgétaires
+    """
+    id = models.AutoField(primary_key=True)
+    code = models.CharField(max_length=255, unique=True)
+    nom = models.CharField(max_length=255)
+    nom_court = models.CharField(max_length=255, blank=True)
+    # meta
+    actif = models.BooleanField()
+
+
+class Poste(models.Model):
+    """ ATTENTION: DÉSUET
+    Poste (donnée de référence, source: CODA).
+    Un poste est une catégorie destinée à venir raffiner un projet.
+    """
+
+    id = models.IntegerField(primary_key=True)
+    code = models.CharField(max_length=255, unique=True)
+    nom = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, blank=True)
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_poste'
+
+    def __unicode__(self):
+        return "%s - %s (%s)" % (self.code, self.nom, self.type)
+
+
+class ProjetPoste(models.Model):
+    """ ATTENTION: DÉSUET
+    Projet-poste (donnée de référence, source: CODA).
+    Un projet-poste consiste en une raffinement d'un projet par un poste (budgétaire).
+    Subdivision utile pour le suivi budgétaire et comptable.
+    """
+
+    id = models.IntegerField(primary_key=True)
+    code = models.CharField(max_length=255, unique=True)
+    code_projet = models.ForeignKey('Projet', to_field='code', db_column='code_projet')
+    code_poste = models.ForeignKey('Poste', to_field='code', db_column='code_poste')
+    code_bureau = models.ForeignKey('Bureau', to_field='code', db_column='code_bureau')
+    code_programme = models.ForeignKey('Programme', to_field='code', db_column='code_programme')
+    # meta
+    actif = models.BooleanField()
+
+    class Meta:
+        db_table = u'ref_projet_poste'
+
+    def __unicode__(self):
+        return "%s" % (self.code)
+
+
 class Region(models.Model):
     """Région (donnée de référence, source: referentiels_spip).
     Une région est une subdivision géographique du monde pour la gestion de l'AUF.
