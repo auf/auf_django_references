@@ -554,33 +554,65 @@ class EtablissementBase(models.Model):
     Un établissement peut être une université, un centre de recherche, un réseau d'établissement...
     Un établissement peut être membre de l'AUF ou non.
     """
+    MEMBRE_STATUT_CHOICES = (
+        ('T', 'Titulaire'),
+        ('A', 'Associé'),
+        ('C', 'Candidat'),
+    )
+    QUALITE_CHOICES = (
+        ('ESR', "Établissement d'enseignement supérieur et de recherche"),
+        ('CIR', "Centre ou institution de recherche"),
+        ('RES', "Réseau"),
+    )
+
+    # Infos de base
     nom = models.CharField(max_length=255)
     pays = models.ForeignKey('Pays', to_field='code', db_column='pays',
                              related_name='+')
     region = models.ForeignKey('Region', db_column='region', blank=True,
-                               null=True, related_name='+')
+                               null=True, related_name='+', verbose_name='région')
     implantation = models.ForeignKey('Implantation',
                                      db_column='implantation',
                                      related_name='+', blank=True, null=True)
-    # membership
+
+    # Membership
     membre = models.BooleanField()
-    membre_adhesion_date = models.DateField(null=True, blank=True)
-    # responsable
-    responsable_genre = models.CharField(max_length=1, blank=True)
-    responsable_nom = models.CharField(max_length=255, blank=True)
-    responsable_prenom = models.CharField(max_length=255, blank=True)
-    # adresse
+    membre_adhesion_date = models.DateField(null=True, blank=True,
+                                            verbose_name="date d'adhésion")
+    statut = models.CharField(max_length=1, choices=MEMBRE_STATUT_CHOICES,
+                              blank=True, null=True)
+    qualite = models.CharField(max_length=3, choices=QUALITE_CHOICES,
+                               verbose_name="qualité", blank=True,
+                               null=True)
+
+    # Responsable
+    responsable_genre = models.CharField(max_length=1, blank=True,
+                                         verbose_name='genre')
+    responsable_nom = models.CharField(max_length=255, blank=True,
+                                       verbose_name='nom')
+    responsable_prenom = models.CharField(max_length=255, blank=True,
+                                          verbose_name='prénom')
+
+    # Adresse
     adresse = models.CharField(max_length=255, blank=True)
-    code_postal = models.CharField(max_length=20, blank=True)
-    cedex = models.CharField(max_length=20, blank=True)
+    code_postal = models.CharField(max_length=20, blank=True,
+                                   verbose_name='code postal')
+    cedex = models.CharField(max_length=20, blank=True, verbose_name='CEDEX')
     ville = models.CharField(max_length=255, blank=True)
     province = models.CharField(max_length=255, blank=True)
-    telephone = models.CharField(max_length=255, blank=True)
+    telephone = models.CharField(max_length=255, blank=True,
+                                 verbose_name='téléphone')
     fax = models.CharField(max_length=255, blank=True)
-    url = models.URLField(verify_exists=False, max_length=255, null=True, blank=True)
-    # meta
-    actif = models.BooleanField()
-    # manager
+    url = models.URLField(verify_exists=False, max_length=255, null=True,
+                          blank=True, verbose_name='URL')
+
+    # Meta-données
+    actif = models.BooleanField(default=True)
+    date_modification = models.DateField(verbose_name='date de modification',
+                                         blank=True, null=True)
+    commentaire = models.TextField(blank=True)
+
+    # Manager
     objects = EtablissementManager()
 
     class Meta:
@@ -588,7 +620,7 @@ class EtablissementBase(models.Model):
         ordering = ['pays__nom', 'nom']
 
     def __unicode__(self):
-        return "%s - %s (%d)" % (self.pays.nom, self.nom, self.id)
+        return "%s - %s" % (self.pays.nom, self.nom)
 
 
 class Etablissement(EtablissementBase):
