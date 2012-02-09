@@ -354,6 +354,7 @@ class Migration(SchemaMigration):
             ('implantation', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', blank=True, null=True, db_column='implantation', to=orm['managedref.Implantation'])),
             ('membre', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('membre_adhesion_date', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('qualite', self.gf('django.db.models.fields.CharField')(max_length=3, blank=True, null=True)),
             ('responsable_genre', self.gf('django.db.models.fields.CharField')(max_length=1, blank=True)),
             ('responsable_nom', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
             ('responsable_prenom', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
