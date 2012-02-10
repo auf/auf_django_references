@@ -1,3 +1,14 @@
+0.7 (2012-02-10)
+----------------
+
+* Ajout de champs dans le modèle d'établissement: statut, date_modification,
+  commentaire.
+
+* La création des vues vers les tables de datamaster fait maintenant plus
+  attention. Les vues sont créées seulement pour les tables qui existent dans la
+  base de données "datamaster" et qui n'existent pas dans la base de données du
+  projet.
+
 0.6 (2012-02-03)
 ----------------
 
