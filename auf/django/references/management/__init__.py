@@ -35,7 +35,7 @@ def post_syncdb(sender, **kwargs):
     # On peut maintenant créer les vues
     cursor = db.connection.cursor()
     for table in datamaster_tables:
-        print "Création d'une vue vers datamaster.%s" % table
+        print u"Création d'une vue vers datamaster.%s" % table
         cursor.execute(
             'CREATE OR REPLACE VIEW `%s` AS SELECT * FROM datamaster.`%s`' % (table, table)
         )
