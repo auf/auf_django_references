@@ -3,6 +3,12 @@
 from django.db import models
 
 
+class ActifsManager(models.Manager):
+
+    def get_query_set(self):
+        return super(ActifsManager, self).get_query_set().filter(actif=True)
+
+
 class Employe(models.Model):
     """Personne en contrat d'employé (CDD ou CDI) à l'AUF
     """
@@ -423,6 +429,10 @@ class Region(models.Model):
     # meta
     actif = models.BooleanField()
 
+    # managers
+    objects = ActifsManager()
+    avec_inactifs = models.Manager()
+
     class Meta:
         db_table = u'ref_region'
         ordering = ['nom']
@@ -581,8 +591,14 @@ class Pays(models.Model):
 
 class EtablissementManager(models.Manager):
 
+    def __init__(self, avec_inactifs=False):
+        super(EtablissementManager, self).__init__()
+        self.avec_inactifs=avec_inactifs
+
     def get_query_set(self):
         qs = super(EtablissementManager, self).get_query_set()
+        if not self.avec_inactifs:
+            qs = qs.filter(actif=True)
         return qs.select_related('pays')
 
 
@@ -652,6 +668,7 @@ class EtablissementBase(models.Model):
 
     # Manager
     objects = EtablissementManager()
+    avec_inactifs = EtablissementManager(avec_inactifs=True)
 
     class Meta:
         abstract = True
