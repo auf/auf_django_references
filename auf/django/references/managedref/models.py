@@ -9,20 +9,43 @@ class Employe(models.Model):
     id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)
-    implantation = models.ForeignKey(to='Implantation', db_column='implantation', related_name='lieu_travail_theorique_de')    # SGRH
-    implantation_physique = models.ForeignKey(to='Implantation', db_column='implantation_physique', related_name='lieu_travail_reel_de')
+    implantation = models.ForeignKey(
+        'references.Implantation',
+        db_column='implantation',
+        related_name='lieu_travail_theorique_de'
+    )
+    implantation_physique = models.ForeignKey(
+        'references.Implantation',
+        db_column='implantation_physique',
+        related_name='lieu_travail_reel_de'
+    )
     courriel = models.CharField(max_length=255, null=True, blank=True)
     genre = models.CharField(max_length=3)
     fonction = models.CharField(max_length=255, null=True, blank=True)
     telephone_poste = models.CharField(max_length=255, null=True, blank=True)
     telephone_ip = models.CharField(max_length=255, null=True, blank=True)
-    responsable = models.ForeignKey(to='Employe', db_column='responsable', related_name='responsable_de', null=True, blank=True)
+    responsable = models.ForeignKey(
+        'references.Employe',
+        db_column='responsable',
+        related_name='responsable_de',
+        null=True, blank=True
+    )
     mandat_debut = models.DateField(null=True, blank=True)
     mandat_fin = models.DateField(null=True, blank=True)
     date_entree = models.DateField(null=True, blank=True)
-    service = models.ForeignKey('Service', db_column='service')
-    poste_type_1 =  models.ForeignKey('PosteType', null=True, blank=True, db_column='poste_type_1', related_name='poste_type_1')
-    poste_type_2 =  models.ForeignKey('PosteType', null=True, blank=True, db_column='poste_type_2', related_name='poste_type_2')
+    service = models.ForeignKey('references.Service', db_column='service')
+    poste_type_1 =  models.ForeignKey(
+        'references.PosteType',
+        null=True, blank=True,
+        db_column='poste_type_1',
+        related_name='poste_type_1'
+    )
+    poste_type_2 =  models.ForeignKey(
+        'references.PosteType',
+        null=True, blank=True,
+        db_column='poste_type_2',
+        related_name='poste_type_2'
+    )
     # meta
     actif = models.BooleanField()
 
@@ -36,7 +59,7 @@ class Employe(models.Model):
 
 class Authentification(models.Model):
     """Authentification"""
-    id = models.ForeignKey('Employe', primary_key=True, db_column='id')
+    id = models.ForeignKey('references.Employe', primary_key=True, db_column='id')
     courriel = models.CharField(max_length=255, unique=True)
     motdepasse = models.CharField(max_length=255)
     actif = models.BooleanField()
@@ -80,7 +103,7 @@ class PosteType(models.Model):
 
 class GroupeArh(models.Model):
     id = models.AutoField(primary_key=True)
-    employe = models.ForeignKey('Employe', db_column='employe')
+    employe = models.ForeignKey('references.Employe', db_column='employe')
     actif = models.BooleanField()
 
     class Meta:
@@ -89,8 +112,8 @@ class GroupeArh(models.Model):
 
 class GroupeDirRegion(models.Model):
     id = models.AutoField(primary_key=True)
-    employe = models.ForeignKey('Employe', db_column='employe')
-    region = models.ForeignKey('Region', db_column='region')
+    employe = models.ForeignKey('references.Employe', db_column='employe')
+    region = models.ForeignKey('references.Region', db_column='region')
     actif = models.BooleanField()
 
     class Meta:
@@ -99,8 +122,8 @@ class GroupeDirRegion(models.Model):
 
 class GroupeAdmRegion(models.Model):
     id = models.AutoField(primary_key=True)
-    employe = models.ForeignKey('Employe', db_column='employe')
-    region = models.ForeignKey('Region', db_column='region')
+    employe = models.ForeignKey('references.Employe', db_column='employe')
+    region = models.ForeignKey('references.Region', db_column='region')
     actif = models.BooleanField()
 
     class Meta:
@@ -109,8 +132,8 @@ class GroupeAdmRegion(models.Model):
 
 class GroupeRespImplantation(models.Model):
     id = models.AutoField(primary_key=True)
-    employe = models.ForeignKey('Employe', db_column='employe')
-    implantation = models.ForeignKey('Implantation', db_column='implantation')
+    employe = models.ForeignKey('references.Employe', db_column='employe')
+    implantation = models.ForeignKey('references.Implantation', db_column='implantation')
     type = models.CharField(max_length=255, blank=True, null=True)
     actif = models.BooleanField()
 
@@ -120,8 +143,8 @@ class GroupeRespImplantation(models.Model):
 
 class GroupeDirProgramme(models.Model):
     id = models.AutoField(primary_key=True)
-    employe = models.ForeignKey('Employe', db_column='employe')
-    service = models.ForeignKey('Service', db_column='service')
+    employe = models.ForeignKey('references.Employe', db_column='employe')
+    service = models.ForeignKey('references.Service', db_column='service')
     actif = models.BooleanField()
 
     class Meta:
@@ -130,8 +153,8 @@ class GroupeDirProgramme(models.Model):
 
 class GroupeDirDelegProgrammeReg(models.Model):
     id = models.AutoField(primary_key=True)
-    employe = models.ForeignKey('Employe', db_column='employe')
-    region = models.ForeignKey('Region', db_column='region')
+    employe = models.ForeignKey('references.Employe', db_column='employe')
+    region = models.ForeignKey('references.Region', db_column='region')
     actif = models.BooleanField()
 
     class Meta:
@@ -140,7 +163,7 @@ class GroupeDirDelegProgrammeReg(models.Model):
 
 class GroupeComptable(models.Model):
     id = models.AutoField(primary_key=True)
-    employe = models.ForeignKey('Employe', db_column='employe')
+    employe = models.ForeignKey('references.Employe', db_column='employe')
     actif = models.BooleanField()
 
     class Meta:
@@ -149,7 +172,7 @@ class GroupeComptable(models.Model):
 
 class GroupeComptableRegional(models.Model):
     id = models.AutoField(primary_key=True)
-    employe = models.ForeignKey('Employe', db_column='employe')
+    employe = models.ForeignKey('references.Employe', db_column='employe')
     actif = models.BooleanField()
 
     class Meta:
@@ -158,7 +181,7 @@ class GroupeComptableRegional(models.Model):
 
 class GroupeComptableLocal(models.Model):
     id = models.AutoField(primary_key=True)
-    employe = models.ForeignKey('Employe', db_column='employe')
+    employe = models.ForeignKey('references.Employe', db_column='employe')
     actif = models.BooleanField()
 
     class Meta:
@@ -227,9 +250,15 @@ class Projet(models.Model):
     presentation = models.TextField(null=True, blank=True)
     partenaires = models.TextField(null=True, blank=True)
     service = models.CharField(max_length=255, choices=SERVICE_CHOICES, blank=True, null=True)
-    objectif_specifique = models.ForeignKey('ObjectifSpecifique', blank=True, null=True, db_column='objectif_specifique')
-    implantation = models.ForeignKey('Implantation', null=True, blank=True, db_column='implantation')
-    etablissement = models.ForeignKey('Etablissement', null=True, blank=True, db_column='etablissement')
+    objectif_specifique = models.ForeignKey(
+        'references.ObjectifSpecifique',
+        blank=True, null=True,
+        db_column='objectif_specifique'
+    )
+    implantation = models.ForeignKey('references.Implantation', null=True,
+                                     blank=True, db_column='implantation')
+    etablissement = models.ForeignKey('references.Etablissement', null=True,
+                                      blank=True, db_column='etablissement')
     date_debut = models.DateField(null=True, blank=True)
     date_fin = models.DateField(null=True, blank=True)
     # meta
@@ -251,7 +280,7 @@ class ProjetComposante(models.Model):
     nom = models.CharField(max_length=255)
     nom_court = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    projet = models.ForeignKey('Projet', db_column='projet')
+    projet = models.ForeignKey('references.Projet', db_column='projet')
     # meta
     actif = models.BooleanField()
 
@@ -283,7 +312,8 @@ class UniteProjet(models.Model):
 class ObjectifSpecifique(models.Model):
     id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
-    objectif_strategique = models.ForeignKey('ObjectifStrategique', db_column='objectif_strategique')
+    objectif_strategique = models.ForeignKey('references.ObjectifStrategique',
+                                             db_column='objectif_strategique')
     # meta
     actif = models.BooleanField()
 
@@ -365,10 +395,12 @@ class ProjetPoste(models.Model):
 
     id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=255, unique=True)
-    code_projet = models.ForeignKey('Projet', to_field='code', db_column='code_projet')
-    code_poste = models.ForeignKey('Poste', to_field='code', db_column='code_poste')
-    code_bureau = models.ForeignKey('Bureau', to_field='code', db_column='code_bureau')
-    code_programme = models.ForeignKey('Programme', to_field='code', db_column='code_programme')
+    code_projet = models.ForeignKey('references.Projet', to_field='code', db_column='code_projet')
+    code_poste = models.ForeignKey('references.Poste', to_field='code', db_column='code_poste')
+    code_bureau = models.ForeignKey('references.Bureau', to_field='code', db_column='code_bureau')
+    code_programme = models.ForeignKey('references.Programme',
+                                       to_field='code',
+                                       db_column='code_programme')
     # meta
     actif = models.BooleanField()
 
@@ -385,7 +417,7 @@ class Region(models.Model):
     """
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255, db_index=True)
-    implantation_bureau = models.ForeignKey('Implantation',
+    implantation_bureau = models.ForeignKey('references.Implantation',
                                             db_column='implantation_bureau',
                                             related_name='gere_region', null=True, blank=True)
     # meta
@@ -413,8 +445,8 @@ class Bureau(models.Model):
     nom = models.CharField(max_length=255)
     nom_court = models.CharField(max_length=255, blank=True)
     nom_long = models.CharField(max_length=255, blank=True)
-    implantation = models.ForeignKey('Implantation', db_column='implantation')
-    region = models.ForeignKey('Region', db_column='region')
+    implantation = models.ForeignKey('references.Implantation', db_column='implantation')
+    region = models.ForeignKey('references.Region', db_column='region')
     # meta
     actif = models.BooleanField()
 
@@ -437,8 +469,8 @@ class Implantation(models.Model):
     nom_court = models.CharField(max_length=255, blank=True)
     nom_long = models.CharField(max_length=255, blank=True)
     type = models.CharField(max_length=255)
-    bureau_rattachement = models.ForeignKey('Implantation', db_column='bureau_rattachement')
-    region = models.ForeignKey('Region', db_column='region')
+    bureau_rattachement = models.ForeignKey('references.Implantation', db_column='bureau_rattachement')
+    region = models.ForeignKey('references.Region', db_column='region')
     fuseau_horaire = models.CharField(max_length=255, blank=True)
     code_meteo = models.CharField(max_length=255, blank=True)
     # responsable
@@ -454,7 +486,10 @@ class Implantation(models.Model):
     adresse_postale_code_postal = models.CharField(max_length=20, blank=True, null=True)
     adresse_postale_code_postal_avant_ville = models.NullBooleanField()
     adresse_postale_region = models.CharField(max_length=255, blank=True, null=True)
-    adresse_postale_pays = models.ForeignKey('Pays', to_field='code', db_column='adresse_postale_pays', related_name='impl_adresse_postale')
+    adresse_postale_pays = models.ForeignKey('references.Pays',
+                                             to_field='code',
+                                             db_column='adresse_postale_pays',
+                                             related_name='impl_adresse_postale')
     # adresse physique
     adresse_physique_precision_avant = models.CharField(max_length=255, blank=True)
     adresse_physique_no = models.CharField(max_length=30, blank=True)
@@ -465,7 +500,10 @@ class Implantation(models.Model):
     adresse_physique_code_postal = models.CharField(max_length=30, blank=True)
     adresse_physique_code_postal_avant_ville = models.NullBooleanField()
     adresse_physique_region = models.CharField(max_length=255, blank=True)
-    adresse_physique_pays = models.ForeignKey('Pays', to_field='code', db_column='adresse_physique_pays', related_name='impl_adresse_physique')
+    adresse_physique_pays = models.ForeignKey('references.Pays',
+                                              to_field='code',
+                                              db_column='adresse_physique_pays',
+                                              related_name='impl_adresse_physique')
     # autres coordonnées
     telephone = models.CharField(max_length=255, blank=True)
     telephone_interne = models.CharField(max_length=255, blank=True)
@@ -521,8 +559,8 @@ class Pays(models.Model):
     code = models.CharField(max_length=2, unique=True)
     code_iso3 = models.CharField(max_length=3, unique=True)
     nom = models.CharField(max_length=255)
-    region = models.ForeignKey('Region', db_column='region')
-    code_bureau = models.ForeignKey('Bureau', to_field='code',
+    region = models.ForeignKey('references.Region', db_column='region')
+    code_bureau = models.ForeignKey('references.Bureau', to_field='code',
                                     db_column='code_bureau', blank=True,
                                     null=True)
     nord_sud = models.CharField(max_length=255, blank=True, null=True)
@@ -567,11 +605,11 @@ class EtablissementBase(models.Model):
 
     # Infos de base
     nom = models.CharField(max_length=255)
-    pays = models.ForeignKey('Pays', to_field='code', db_column='pays',
+    pays = models.ForeignKey('references.Pays', to_field='code', db_column='pays',
                              related_name='+')
-    region = models.ForeignKey('Region', db_column='region', blank=True,
+    region = models.ForeignKey('references.Region', db_column='region', blank=True,
                                null=True, related_name='+', verbose_name='région')
-    implantation = models.ForeignKey('Implantation',
+    implantation = models.ForeignKey('references.Implantation',
                                      db_column='implantation',
                                      related_name='+', blank=True, null=True)
 
