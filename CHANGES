@@ -1,3 +1,16 @@
+0.8 (2012-02-24)
+----------------
+
+* Le manager par défaut (``objects``) des modèles Region et Etablissement ne retourne
+  maintenant que les objets actifs. Pour obtenir tous les objets, utiliser le
+  manager ``avec_inactifs``.
+
+* Les clés étrangères des modèles retournaient auparavant des instances des
+  classes définies dans ``auf.django.references.managedref``. Les objets
+  retournés viennent maintenant de ``auf.django.references``. Cela permet aux
+  applications tierces de définir des relations vers les données de référence et
+  de naviguer la relation à l'envers dans toutes les situations.
+
 0.7 (2012-02-10)
 ----------------
 
