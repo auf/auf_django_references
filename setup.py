@@ -14,6 +14,7 @@ setup(
     url='http://pypi.auf.org/%s' % name,
     license='GPL',
     packages=find_packages(exclude=['tests', 'tests.*']),
+    namespace_packages=['auf', 'auf.django'],
     include_package_data=True,
     zip_safe=False,
 )
