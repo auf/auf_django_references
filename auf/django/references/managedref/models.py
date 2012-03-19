@@ -10,7 +10,8 @@ class ActifsManager(models.Manager):
 
 
 class Employe(models.Model):
-    """Personne en contrat d'employé (CDD ou CDI) à l'AUF
+    """
+    Personne en contrat d'employé (CDD ou CDI) à l'AUF
     """
     id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
@@ -40,13 +41,13 @@ class Employe(models.Model):
     mandat_fin = models.DateField(null=True, blank=True)
     date_entree = models.DateField(null=True, blank=True)
     service = models.ForeignKey('references.Service', db_column='service')
-    poste_type_1 =  models.ForeignKey(
+    poste_type_1 = models.ForeignKey(
         'references.PosteType',
         null=True, blank=True,
         db_column='poste_type_1',
         related_name='poste_type_1'
     )
-    poste_type_2 =  models.ForeignKey(
+    poste_type_2 = models.ForeignKey(
         'references.PosteType',
         null=True, blank=True,
         db_column='poste_type_2',
@@ -65,7 +66,9 @@ class Employe(models.Model):
 
 class Authentification(models.Model):
     """Authentification"""
-    id = models.ForeignKey('references.Employe', primary_key=True, db_column='id')
+    id = models.ForeignKey(
+        'references.Employe', primary_key=True, db_column='id'
+    )
     courriel = models.CharField(max_length=255, unique=True)
     motdepasse = models.CharField(max_length=255)
     actif = models.BooleanField()
@@ -139,7 +142,9 @@ class GroupeAdmRegion(models.Model):
 class GroupeRespImplantation(models.Model):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
-    implantation = models.ForeignKey('references.Implantation', db_column='implantation')
+    implantation = models.ForeignKey(
+        'references.Implantation', db_column='implantation'
+    )
     type = models.CharField(max_length=255, blank=True, null=True)
     actif = models.BooleanField()
 
@@ -220,7 +225,8 @@ class Discipline(models.Model):
 class Programme(models.Model):
     """ ATTENTION: DÉSUET
     Programme (donnée de référence, source: SQI).
-    Structure interne par laquelle l'AUF exécute ses projets et activités, dispense ses produits et ses services.
+    Structure interne par laquelle l'AUF exécute ses projets et activités,
+    dispense ses produits et ses services.
     """
 
     id = models.IntegerField(primary_key=True)
@@ -244,9 +250,13 @@ class Projet(models.Model):
     """Projet (donnée de référence, source: programmation-quadriennalle).
     """
     SERVICE_CHOICES = (
-        ('1', "Direction de la langue et de la communication scientifique en français"),
+        ('1',
+         "Direction de la langue et de la communication scientifique "
+         "en français"),
         ('2', "Direction du développement et de la valorisation"),
-        ('3', "Direction de l'innovation pédagogique et de l'économie de la connaissance"),
+        ('3',
+         "Direction de l'innovation pédagogique et de l'économie "
+         "de la connaissance"),
         ('4', "Direction du renforcement des capacités scientifiques"),
     )
 
@@ -255,7 +265,9 @@ class Projet(models.Model):
     nom = models.CharField(max_length=255)
     presentation = models.TextField(null=True, blank=True)
     partenaires = models.TextField(null=True, blank=True)
-    service = models.CharField(max_length=255, choices=SERVICE_CHOICES, blank=True, null=True)
+    service = models.CharField(
+        max_length=255, choices=SERVICE_CHOICES, blank=True, null=True
+    )
     objectif_specifique = models.ForeignKey(
         'references.ObjectifSpecifique',
         blank=True, null=True,
@@ -393,20 +405,27 @@ class Poste(models.Model):
 
 
 class ProjetPoste(models.Model):
-    """ ATTENTION: DÉSUET
+    """
+    ATTENTION: DÉSUET
     Projet-poste (donnée de référence, source: CODA).
-    Un projet-poste consiste en une raffinement d'un projet par un poste (budgétaire).
-    Subdivision utile pour le suivi budgétaire et comptable.
+    Un projet-poste consiste en une raffinement d'un projet par un poste
+    (budgétaire).  Subdivision utile pour le suivi budgétaire et comptable.
     """
 
     id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=255, unique=True)
-    code_projet = models.ForeignKey('references.Projet', to_field='code', db_column='code_projet')
-    code_poste = models.ForeignKey('references.Poste', to_field='code', db_column='code_poste')
-    code_bureau = models.ForeignKey('references.Bureau', to_field='code', db_column='code_bureau')
-    code_programme = models.ForeignKey('references.Programme',
-                                       to_field='code',
-                                       db_column='code_programme')
+    code_projet = models.ForeignKey(
+        'references.Projet', to_field='code', db_column='code_projet'
+    )
+    code_poste = models.ForeignKey(
+        'references.Poste', to_field='code', db_column='code_poste'
+    )
+    code_bureau = models.ForeignKey(
+        'references.Bureau', to_field='code', db_column='code_bureau'
+    )
+    code_programme = models.ForeignKey(
+        'references.Programme', to_field='code', db_column='code_programme'
+    )
     # meta
     actif = models.BooleanField()
 
@@ -419,13 +438,15 @@ class ProjetPoste(models.Model):
 
 class Region(models.Model):
     """Région (donnée de référence, source: referentiels_spip).
-    Une région est une subdivision géographique du monde pour la gestion de l'AUF.
+    Une région est une subdivision géographique du monde pour la gestion de
+    l'AUF.
     """
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255, db_index=True)
-    implantation_bureau = models.ForeignKey('references.Implantation',
-                                            db_column='implantation_bureau',
-                                            related_name='gere_region', null=True, blank=True)
+    implantation_bureau = models.ForeignKey(
+        'references.Implantation', db_column='implantation_bureau',
+        related_name='gere_region', null=True, blank=True
+    )
     # meta
     actif = models.BooleanField()
 
@@ -444,18 +465,26 @@ class Region(models.Model):
 
 
 class Bureau(models.Model):
-    """Bureau (donnée de référence, source: SQI).
-    Référence legacy entre la notion de région et celle d'implantation responsable des régions et du central.
+    """
+    Bureau (donnée de référence, source: SQI).
+
+    Référence legacy entre la notion de région et celle d'implantation
+    responsable des régions et du central.
+
     Un bureau est :
     - soit le bureau régional d'une région (implantations de type 'Bureau')
-    - soit la notion unique de Service central pour les 2 implantations centrales (implantations de type 'Service central' et 'Siege').
+    - soit la notion unique de Service central pour les 2 implantations
+      centrales (implantations de type 'Service central' et 'Siege').
+
     Ne pas confondre avec les seuls 'bureaux régionaux'.
     """
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
     nom_court = models.CharField(max_length=255, blank=True)
     nom_long = models.CharField(max_length=255, blank=True)
-    implantation = models.ForeignKey('references.Implantation', db_column='implantation')
+    implantation = models.ForeignKey(
+        'references.Implantation', db_column='implantation'
+    )
     region = models.ForeignKey('references.Region', db_column='region')
     # meta
     actif = models.BooleanField()
@@ -471,37 +500,59 @@ class Bureau(models.Model):
 
 
 class Implantation(models.Model):
-    """Implantation (donnée de référence, source: Implantus)
-    Une implantation est un endroit où l'AUF est présente et offre des services spécifiques.
-    Deux implantations peuvent être au même endroit physique.
+    """
+    Implantation (donnée de référence, source: Implantus)
+
+    Une implantation est un endroit où l'AUF est présente et offre des
+    services spécifiques. Deux implantations peuvent être au même endroit
+    physique.
     """
     nom = models.CharField(max_length=255)
     nom_court = models.CharField(max_length=255, blank=True)
     nom_long = models.CharField(max_length=255, blank=True)
     type = models.CharField(max_length=255)
-    bureau_rattachement = models.ForeignKey('references.Implantation', db_column='bureau_rattachement')
+    bureau_rattachement = models.ForeignKey(
+        'references.Implantation', db_column='bureau_rattachement'
+    )
     region = models.ForeignKey('references.Region', db_column='region')
     fuseau_horaire = models.CharField(max_length=255, blank=True)
     code_meteo = models.CharField(max_length=255, blank=True)
     # responsable
-    responsable_implantation = models.IntegerField(null=True, blank=True)   # models.ForeignKey('Employe')
+    responsable_implantation = models.IntegerField(null=True, blank=True)
     # adresse postale
-    adresse_postale_precision_avant = models.CharField(max_length=255, blank=True, null=True)
+    adresse_postale_precision_avant = models.CharField(
+        max_length=255, blank=True, null=True
+    )
     adresse_postale_no = models.CharField(max_length=30, blank=True, null=True)
-    adresse_postale_rue = models.CharField(max_length=255, blank=True, null=True)
-    adresse_postale_bureau = models.CharField(max_length=255, blank=True, null=True)
-    adresse_postale_precision = models.CharField(max_length=255, blank=True, null=True)
-    adresse_postale_boite_postale = models.CharField(max_length=255, blank=True, null=True)
+    adresse_postale_rue = models.CharField(
+        max_length=255, blank=True, null=True
+    )
+    adresse_postale_bureau = models.CharField(
+        max_length=255, blank=True, null=True
+    )
+    adresse_postale_precision = models.CharField(
+        max_length=255, blank=True, null=True
+    )
+    adresse_postale_boite_postale = models.CharField(
+        max_length=255, blank=True, null=True
+    )
     adresse_postale_ville = models.CharField(max_length=255)
-    adresse_postale_code_postal = models.CharField(max_length=20, blank=True, null=True)
+    adresse_postale_code_postal = models.CharField(
+        max_length=20, blank=True, null=True
+    )
     adresse_postale_code_postal_avant_ville = models.NullBooleanField()
-    adresse_postale_region = models.CharField(max_length=255, blank=True, null=True)
-    adresse_postale_pays = models.ForeignKey('references.Pays',
-                                             to_field='code',
-                                             db_column='adresse_postale_pays',
-                                             related_name='impl_adresse_postale')
+    adresse_postale_region = models.CharField(
+        max_length=255, blank=True, null=True
+    )
+    adresse_postale_pays = models.ForeignKey(
+        'references.Pays', to_field='code',
+        db_column='adresse_postale_pays',
+        related_name='impl_adresse_postale'
+    )
     # adresse physique
-    adresse_physique_precision_avant = models.CharField(max_length=255, blank=True)
+    adresse_physique_precision_avant = models.CharField(
+        max_length=255, blank=True
+    )
     adresse_physique_no = models.CharField(max_length=30, blank=True)
     adresse_physique_rue = models.CharField(max_length=255, blank=True)
     adresse_physique_bureau = models.CharField(max_length=255, blank=True)
@@ -510,10 +561,11 @@ class Implantation(models.Model):
     adresse_physique_code_postal = models.CharField(max_length=30, blank=True)
     adresse_physique_code_postal_avant_ville = models.NullBooleanField()
     adresse_physique_region = models.CharField(max_length=255, blank=True)
-    adresse_physique_pays = models.ForeignKey('references.Pays',
-                                              to_field='code',
-                                              db_column='adresse_physique_pays',
-                                              related_name='impl_adresse_physique')
+    adresse_physique_pays = models.ForeignKey(
+        'references.Pays', to_field='code',
+        db_column='adresse_physique_pays',
+        related_name='impl_adresse_physique'
+    )
     # autres coordonnées
     telephone = models.CharField(max_length=255, blank=True)
     telephone_interne = models.CharField(max_length=255, blank=True)
@@ -528,7 +580,7 @@ class Implantation(models.Model):
     date_inauguration = models.DateField(null=True, blank=True)
     date_extension = models.DateField(null=True, blank=True)
     date_fermeture = models.DateField(null=True, blank=True)
-    hebergement_etablissement = models.CharField(max_length=255, blank=True)    # models.ForeignKey('Etablissement', db_column='hebergement_etablissement')
+    hebergement_etablissement = models.CharField(max_length=255, blank=True)
     hebergement_convention = models.NullBooleanField()
     hebergement_convention_date = models.DateField(null=True, blank=True)
     remarque = models.TextField()
@@ -542,14 +594,16 @@ class Implantation(models.Model):
         class Ouvertes(models.Manager):
 
             def get_query_set(self):
-                return super(Implantation.Managers.Ouvertes, self).get_query_set().filter(
-                    actif=True, statut=1
-                )
+                return super(Implantation.Managers.Ouvertes, self) \
+                        .get_query_set() \
+                        .filter(actif=True, statut=1)
 
         class Actifs(models.Manager):
 
             def get_query_set(self):
-                return super(Implantation.Managers.Actifs, self).get_query_set().filter(actif=True)
+                return super(Implantation.Managers.Actifs, self) \
+                        .get_query_set() \
+                        .filter(actif=True)
 
     objects = models.Manager()
     ouvertes = Managers.Ouvertes()
@@ -565,7 +619,11 @@ class Implantation(models.Model):
 
 
 class Pays(models.Model):
-    """Pays (donnée de référence, source: SQI).  Liste AUF basée sur la liste ISO-3166-1.  """
+    """
+    Pays (donnée de référence, source: SQI).
+
+    Liste AUF basée sur la liste ISO-3166-1.
+    """
     code = models.CharField(max_length=2, unique=True)
     code_iso3 = models.CharField(max_length=3, unique=True)
     nom = models.CharField(max_length=255)
@@ -593,7 +651,7 @@ class EtablissementManager(models.Manager):
 
     def __init__(self, avec_inactifs=False):
         super(EtablissementManager, self).__init__()
-        self.avec_inactifs=avec_inactifs
+        self.avec_inactifs = avec_inactifs
 
     def get_query_set(self):
         qs = super(EtablissementManager, self).get_query_set()
@@ -605,8 +663,10 @@ class EtablissementManager(models.Manager):
 class EtablissementBase(models.Model):
     """
     Établissement (donnée de référence, source: GDE).
-    Un établissement peut être une université, un centre de recherche, un réseau d'établissement...
-    Un établissement peut être membre de l'AUF ou non.
+
+    Un établissement peut être une université, un centre de recherche, un
+    réseau d'établissement... Un établissement peut être membre de l'AUF ou
+    non.
     """
     MEMBRE_STATUT_CHOICES = (
         ('T', 'Titulaire'),
@@ -621,13 +681,18 @@ class EtablissementBase(models.Model):
 
     # Infos de base
     nom = models.CharField(max_length=255)
-    pays = models.ForeignKey('references.Pays', to_field='code', db_column='pays',
-                             related_name='+')
-    region = models.ForeignKey('references.Region', db_column='region', blank=True,
-                               null=True, related_name='+', verbose_name='région')
-    implantation = models.ForeignKey('references.Implantation',
-                                     db_column='implantation',
-                                     related_name='+', blank=True, null=True)
+    pays = models.ForeignKey(
+        'references.Pays', to_field='code', db_column='pays',
+        related_name='+'
+    )
+    region = models.ForeignKey(
+        'references.Region', db_column='region', blank=True, null=True,
+        related_name='+', verbose_name='région'
+    )
+    implantation = models.ForeignKey(
+        'references.Implantation', db_column='implantation',
+        related_name='+', blank=True, null=True
+    )
 
     # Membership
     membre = models.BooleanField()
@@ -640,12 +705,18 @@ class EtablissementBase(models.Model):
                                null=True)
 
     # Responsable
-    responsable_genre = models.CharField(max_length=1, blank=True,
-                                         verbose_name='genre')
-    responsable_nom = models.CharField(max_length=255, blank=True,
-                                       verbose_name='nom')
-    responsable_prenom = models.CharField(max_length=255, blank=True,
-                                          verbose_name='prénom')
+    responsable_genre = models.CharField(
+        max_length=1, blank=True, verbose_name='genre'
+    )
+    responsable_nom = models.CharField(
+        max_length=255, blank=True, verbose_name='nom'
+    )
+    responsable_prenom = models.CharField(
+        max_length=255, blank=True, verbose_name='prénom'
+    )
+    responsable_fonction = models.CharField(
+        max_length=255, blank=True, verbose_name='fonction'
+    )
 
     # Adresse
     adresse = models.CharField(max_length=255, blank=True)
