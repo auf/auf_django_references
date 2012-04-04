@@ -91,7 +91,7 @@ dans la configuration de l'admin::
     class UniversiteAdmin(admin.ModelAdmin):
         form = UniversiteForm
 
-    admin.register(Universite, UniversiteForm)
+    admin.register(Universite, UniversiteAdmin)
 
 On peut aussi utiliser le formulaire ailleurs. Dans ce cas, il faudra penser à
 inclure les "media" associés pour que le javascript fonctionne. Par exemple:
