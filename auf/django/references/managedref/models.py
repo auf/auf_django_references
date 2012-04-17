@@ -507,6 +507,13 @@ class Implantation(models.Model):
     services spécifiques. Deux implantations peuvent être au même endroit
     physique.
     """
+    STATUT_CHOICES = (
+        (0, u'Fermée ou jamais ouverte'),
+        (1, u'Ouverte'),
+        (2, u'Ouverture imminente'),
+        (3, u'En projet')
+    )
+
     nom = models.CharField(max_length=255)
     nom_court = models.CharField(max_length=255, blank=True)
     nom_long = models.CharField(max_length=255, blank=True)
@@ -575,7 +582,7 @@ class Implantation(models.Model):
     courriel_interne = models.EmailField(blank=True)
     url = models.URLField(verify_exists=False, max_length=255, blank=True)
     # traitement
-    statut = models.IntegerField()
+    statut = models.IntegerField(choices=STATUT_CHOICES)
     date_ouverture = models.DateField(null=True, blank=True)
     date_inauguration = models.DateField(null=True, blank=True)
     date_extension = models.DateField(null=True, blank=True)
