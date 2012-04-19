@@ -700,6 +700,8 @@ class EtablissementBase(models.Model):
         'references.Implantation', db_column='implantation',
         related_name='+', blank=True, null=True
     )
+    description = models.TextField(blank=True)
+    historique = models.TextField(blank=True)
 
     # Membership
     membre = models.BooleanField()
