@@ -18,6 +18,7 @@ INSTALLED_APPS = (
     'auf.django.references',
     'auf.django.references.managedref',
     'tests.universite',
+    'tests.simpletests',
 )
 
 ROOT_URLCONF = 'tests.urls'

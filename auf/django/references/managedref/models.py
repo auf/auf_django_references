@@ -4,12 +4,32 @@ from django.db import models
 
 
 class ActifsManager(models.Manager):
+    """
+    Manager pour ``ActifsModel``.
+    """
 
     def get_query_set(self):
         return super(ActifsManager, self).get_query_set().filter(actif=True)
 
 
-class Employe(models.Model):
+class ActifsModel(models.Model):
+    """
+    Modèle faisant la gestion des objets actifs/inactifs.
+
+    Le manager par défaut ne liste que les objets actifs. Pour avoir tous
+    les objets, utiliser le manager ``avec_inactifs``.
+    """
+    actif = models.BooleanField(default=True, editable=False)
+
+    # Managers
+    objects = ActifsManager()
+    avec_inactifs = models.Manager()
+
+    class Meta:
+        abstract = True
+
+
+class Employe(ActifsModel):
     """
     Personne en contrat d'employé (CDD ou CDI) à l'AUF
     """
@@ -53,8 +73,6 @@ class Employe(models.Model):
         db_column='poste_type_2',
         related_name='poste_type_2'
     )
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_employe'
@@ -64,14 +82,13 @@ class Employe(models.Model):
         return u"%s, %s [%d]" % (self.nom, self.prenom, self.id)
 
 
-class Authentification(models.Model):
+class Authentification(ActifsModel):
     """Authentification"""
     id = models.ForeignKey(
         'references.Employe', primary_key=True, db_column='id'
     )
     courriel = models.CharField(max_length=255, unique=True)
     motdepasse = models.CharField(max_length=255)
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_authentification'
@@ -81,12 +98,11 @@ class Authentification(models.Model):
         return u"%s [%d]" % (self.courriel, self.id)
 
 
-class Service(models.Model):
+class Service(ActifsModel):
     """Services (donnée de référence, source: SGRH).
     """
     id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_service'
@@ -96,12 +112,11 @@ class Service(models.Model):
         return "%s (%s)" % (self.nom, self.id)
 
 
-class PosteType(models.Model):
+class PosteType(ActifsModel):
     """Postes types (donnée de référence, source: SGRH).
     """
     id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_poste_type'
@@ -110,96 +125,87 @@ class PosteType(models.Model):
         return "%s (%s)" % (self.nom, self.id)
 
 
-class GroupeArh(models.Model):
+class GroupeArh(ActifsModel):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_groupe_arh'
 
 
-class GroupeDirRegion(models.Model):
+class GroupeDirRegion(ActifsModel):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     region = models.ForeignKey('references.Region', db_column='region')
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_groupe_dir_region'
 
 
-class GroupeAdmRegion(models.Model):
+class GroupeAdmRegion(ActifsModel):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     region = models.ForeignKey('references.Region', db_column='region')
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_groupe_adm_region'
 
 
-class GroupeRespImplantation(models.Model):
+class GroupeRespImplantation(ActifsModel):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     implantation = models.ForeignKey(
         'references.Implantation', db_column='implantation'
     )
     type = models.CharField(max_length=255, blank=True, null=True)
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_groupe_resp_implantation'
 
 
-class GroupeDirProgramme(models.Model):
+class GroupeDirProgramme(ActifsModel):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     service = models.ForeignKey('references.Service', db_column='service')
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_groupe_dir_programme'
 
 
-class GroupeDirDelegProgrammeReg(models.Model):
+class GroupeDirDelegProgrammeReg(ActifsModel):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     region = models.ForeignKey('references.Region', db_column='region')
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_groupe_dir_deleg_programme_reg'
 
 
-class GroupeComptable(models.Model):
+class GroupeComptable(ActifsModel):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_groupe_comptable'
 
 
-class GroupeComptableRegional(models.Model):
+class GroupeComptableRegional(ActifsModel):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_groupe_comptable_regional'
 
 
-class GroupeComptableLocal(models.Model):
+class GroupeComptableLocal(ActifsModel):
     id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_groupe_comptable_local'
 
 
-class Discipline(models.Model):
+class Discipline(ActifsModel):
     """ ATTENTION: DÉSUET
     Discipline (donnée de référence, source: SQI).
     Une discipline est une catégorie de savoirs scientifiques.
@@ -211,8 +217,6 @@ class Discipline(models.Model):
     nom = models.CharField(max_length=255)
     nom_long = models.CharField(max_length=255, blank=True)
     nom_court = models.CharField(max_length=255, blank=True)
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_discipline'
@@ -222,7 +226,7 @@ class Discipline(models.Model):
         return "%s - %s" % (self.code, self.nom)
 
 
-class Programme(models.Model):
+class Programme(ActifsModel):
     """ ATTENTION: DÉSUET
     Programme (donnée de référence, source: SQI).
     Structure interne par laquelle l'AUF exécute ses projets et activités,
@@ -234,8 +238,6 @@ class Programme(models.Model):
     nom = models.CharField(max_length=255)
     nom_long = models.CharField(max_length=255, blank=True)
     nom_court = models.CharField(max_length=255, blank=True)
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_programme'
@@ -246,7 +248,7 @@ class Programme(models.Model):
 
 #PROGRAMMATION QUADRIENNALLE
 
-class Projet(models.Model):
+class Projet(ActifsModel):
     """Projet (donnée de référence, source: programmation-quadriennalle).
     """
     SERVICE_CHOICES = (
@@ -279,8 +281,6 @@ class Projet(models.Model):
                                       blank=True, db_column='etablissement')
     date_debut = models.DateField(null=True, blank=True)
     date_fin = models.DateField(null=True, blank=True)
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_projet'
@@ -290,7 +290,7 @@ class Projet(models.Model):
         return "%s - %s" % (self.code, self.nom)
 
 
-class ProjetComposante(models.Model):
+class ProjetComposante(ActifsModel):
     """Composantes des projets (source: programmation-quadriennalle)
     """
     id = models.IntegerField(primary_key=True)
@@ -299,8 +299,6 @@ class ProjetComposante(models.Model):
     nom_court = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     projet = models.ForeignKey('references.Projet', db_column='projet')
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_projet_composante'
@@ -310,14 +308,12 @@ class ProjetComposante(models.Model):
         return "%s - %s" % (self.code, self.nom)
 
 
-class UniteProjet(models.Model):
+class UniteProjet(ActifsModel):
     """Unités de projet (source: programmation-quadriennalle)
     """
     id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=10, unique=True)
     nom = models.CharField(max_length=255)
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_unite_projet'
@@ -327,13 +323,11 @@ class UniteProjet(models.Model):
         return "%s - %s" % (self.code, self.nom)
 
 
-class ObjectifSpecifique(models.Model):
+class ObjectifSpecifique(ActifsModel):
     id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     objectif_strategique = models.ForeignKey('references.ObjectifStrategique',
                                              db_column='objectif_strategique')
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_objectif_specifique'
@@ -343,12 +337,10 @@ class ObjectifSpecifique(models.Model):
         return "%s - %s" % (self.id, self.nom)
 
 
-class ObjectifStrategique(models.Model):
+class ObjectifStrategique(ActifsModel):
     id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_objectif_strategique'
@@ -358,11 +350,9 @@ class ObjectifStrategique(models.Model):
         return "%s - %s" % (self.id, self.nom)
 
 
-class Thematique(models.Model):
+class Thematique(ActifsModel):
     id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_thematique'
@@ -372,7 +362,7 @@ class Thematique(models.Model):
         return "%s - %s" % (self.id, self.nom)
 
 
-class ProjetUp(models.Model):
+class ProjetUp(ActifsModel):
     """Projet-unité de projet (source: coda)
        => codes budgétaires
     """
@@ -380,11 +370,9 @@ class ProjetUp(models.Model):
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
     nom_court = models.CharField(max_length=255, blank=True)
-    # meta
-    actif = models.BooleanField()
 
 
-class Poste(models.Model):
+class Poste(ActifsModel):
     """ ATTENTION: DÉSUET
     Poste (donnée de référence, source: CODA).
     Un poste est une catégorie destinée à venir raffiner un projet.
@@ -394,8 +382,6 @@ class Poste(models.Model):
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
     type = models.CharField(max_length=255, blank=True)
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_poste'
@@ -404,7 +390,7 @@ class Poste(models.Model):
         return "%s - %s (%s)" % (self.code, self.nom, self.type)
 
 
-class ProjetPoste(models.Model):
+class ProjetPoste(ActifsModel):
     """
     ATTENTION: DÉSUET
     Projet-poste (donnée de référence, source: CODA).
@@ -426,8 +412,6 @@ class ProjetPoste(models.Model):
     code_programme = models.ForeignKey(
         'references.Programme', to_field='code', db_column='code_programme'
     )
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_projet_poste'
@@ -436,7 +420,7 @@ class ProjetPoste(models.Model):
         return "%s" % (self.code)
 
 
-class Region(models.Model):
+class Region(ActifsModel):
     """Région (donnée de référence, source: referentiels_spip).
     Une région est une subdivision géographique du monde pour la gestion de
     l'AUF.
@@ -447,12 +431,6 @@ class Region(models.Model):
         'references.Implantation', db_column='implantation_bureau',
         related_name='gere_region', null=True, blank=True
     )
-    # meta
-    actif = models.BooleanField()
-
-    # managers
-    objects = ActifsManager()
-    avec_inactifs = models.Manager()
 
     class Meta:
         db_table = u'ref_region'
@@ -464,7 +442,7 @@ class Region(models.Model):
         return "%s (%s)" % (self.nom, self.code)
 
 
-class Bureau(models.Model):
+class Bureau(ActifsModel):
     """
     Bureau (donnée de référence, source: SQI).
 
@@ -486,8 +464,6 @@ class Bureau(models.Model):
         'references.Implantation', db_column='implantation'
     )
     region = models.ForeignKey('references.Region', db_column='region')
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_bureau'
@@ -499,7 +475,7 @@ class Bureau(models.Model):
         return "%s (%s)" % (self.nom, self.code)
 
 
-class Implantation(models.Model):
+class Implantation(ActifsModel):
     """
     Implantation (donnée de référence, source: Implantus)
 
@@ -593,29 +569,19 @@ class Implantation(models.Model):
     remarque = models.TextField()
     commentaire = models.CharField(max_length=255, blank=True)
     # meta
-    actif = models.BooleanField()
     modif_date = models.DateField()
 
     class Managers:
 
-        class Ouvertes(models.Manager):
+        class Ouvertes(ActifsManager):
 
             def get_query_set(self):
                 return super(Implantation.Managers.Ouvertes, self) \
                         .get_query_set() \
-                        .filter(actif=True, statut=1)
+                        .filter(statut=1)
 
-        class Actifs(models.Manager):
-
-            def get_query_set(self):
-                return super(Implantation.Managers.Actifs, self) \
-                        .get_query_set() \
-                        .filter(actif=True)
-
-    objects = models.Manager()
+    objects = ActifsManager()
     ouvertes = Managers.Ouvertes()
-    actifs = Managers.Actifs()
-    actives = actifs
 
     class Meta:
         db_table = u'ref_implantation'
@@ -625,7 +591,7 @@ class Implantation(models.Model):
         return "%s (%d)" % (self.nom, self.id)
 
 
-class Pays(models.Model):
+class Pays(ActifsModel):
     """
     Pays (donnée de référence, source: SQI).
 
@@ -641,8 +607,6 @@ class Pays(models.Model):
     nord_sud = models.CharField(max_length=255, blank=True, null=True)
     developpement = models.CharField(max_length=255, blank=True, null=True)
     monnaie = models.CharField(max_length=255, blank=True, null=True)
-    # meta
-    actif = models.BooleanField()
 
     class Meta:
         db_table = u'ref_pays'
@@ -654,20 +618,7 @@ class Pays(models.Model):
         return "%s (%s)" % (self.nom, self.code)
 
 
-class EtablissementManager(models.Manager):
-
-    def __init__(self, avec_inactifs=False):
-        super(EtablissementManager, self).__init__()
-        self.avec_inactifs = avec_inactifs
-
-    def get_query_set(self):
-        qs = super(EtablissementManager, self).get_query_set()
-        if not self.avec_inactifs:
-            qs = qs.filter(actif=True)
-        return qs.select_related('pays')
-
-
-class EtablissementBase(models.Model):
+class EtablissementBase(ActifsModel):
     """
     Établissement (donnée de référence, source: GDE).
 
@@ -741,14 +692,9 @@ class EtablissementBase(models.Model):
                           blank=True, verbose_name='URL')
 
     # Meta-données
-    actif = models.BooleanField(default=True)
     date_modification = models.DateField(verbose_name='date de modification',
                                          blank=True, null=True)
     commentaire = models.TextField(blank=True)
-
-    # Manager
-    objects = EtablissementManager()
-    avec_inactifs = EtablissementManager(avec_inactifs=True)
 
     class Meta:
         abstract = True
