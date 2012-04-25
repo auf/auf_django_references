@@ -1,3 +1,10 @@
+0.13 (2012-04-25)
+-----------------
+
+* Pour tous les modèles, le manager par défaut (``objects``) ne retourne plus
+  que les objets actifs. Pour obtenir tous les objets, utiliser le manager
+  ``avec_inactifs``.
+
 0.12 (2012-04-19)
 -----------------
 
