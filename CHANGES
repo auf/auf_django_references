@@ -1,3 +1,14 @@
+0.14 (2012-05-03)
+-----------------
+
+* Retiré le module auf.django.references.managedref. Ça causait trop de
+  problèmes. Ce module était utilisé par les tests et par datamaster pour gérer
+  les migrations sur des modèles qui ont managed = False par défaut. Au lieu de
+  ça, j'ai pris une approche beaucoup plus simple qui consiste à ajouter un
+  paramètre de configuration: AUF_REFERENCES_MANAGED. Quand ce paramètre est
+  True, les modèles sont managed. Ce changement ne devrait pas affecter les
+  applications autres que datamaster.
+
 0.13 (2012-04-25)
 -----------------
 
