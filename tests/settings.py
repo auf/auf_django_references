@@ -14,9 +14,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.staticfiles',
-    'south',
     'auf.django.references',
-    'auf.django.references.managedref',
     'tests.universite',
     'tests.simpletests',
 )
@@ -26,3 +24,7 @@ DEBUG = True
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
+
+SECRET_KEY = 'not-secret'
+
+AUF_REFERENCES_MANAGED = True
