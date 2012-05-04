@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 name = 'auf.django.references'
-version = '0.14'
+version = '0.15'
 
 setup(
     name=name,

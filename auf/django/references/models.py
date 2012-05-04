@@ -40,7 +40,6 @@ class Employe(ActifsModel):
     """
     Personne en contrat d'employé (CDD ou CDI) à l'AUF
     """
-    id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)
     implantation = models.ForeignKey(
@@ -110,7 +109,6 @@ class Authentification(ActifsModel):
 class Service(ActifsModel):
     """Services (donnée de référence, source: SGRH).
     """
-    id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
 
     class Meta:
@@ -125,7 +123,6 @@ class Service(ActifsModel):
 class PosteType(ActifsModel):
     """Postes types (donnée de référence, source: SGRH).
     """
-    id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
 
     class Meta:
@@ -137,7 +134,6 @@ class PosteType(ActifsModel):
 
 
 class GroupeArh(ActifsModel):
-    id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
 
     class Meta:
@@ -146,7 +142,6 @@ class GroupeArh(ActifsModel):
 
 
 class GroupeDirRegion(ActifsModel):
-    id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     region = models.ForeignKey('references.Region', db_column='region')
 
@@ -156,7 +151,6 @@ class GroupeDirRegion(ActifsModel):
 
 
 class GroupeAdmRegion(ActifsModel):
-    id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     region = models.ForeignKey('references.Region', db_column='region')
 
@@ -166,7 +160,6 @@ class GroupeAdmRegion(ActifsModel):
 
 
 class GroupeRespImplantation(ActifsModel):
-    id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     implantation = models.ForeignKey(
         'references.Implantation', db_column='implantation'
@@ -179,7 +172,6 @@ class GroupeRespImplantation(ActifsModel):
 
 
 class GroupeDirProgramme(ActifsModel):
-    id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     service = models.ForeignKey('references.Service', db_column='service')
 
@@ -189,7 +181,6 @@ class GroupeDirProgramme(ActifsModel):
 
 
 class GroupeDirDelegProgrammeReg(ActifsModel):
-    id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
     region = models.ForeignKey('references.Region', db_column='region')
 
@@ -199,7 +190,6 @@ class GroupeDirDelegProgrammeReg(ActifsModel):
 
 
 class GroupeComptable(ActifsModel):
-    id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
 
     class Meta:
@@ -208,7 +198,6 @@ class GroupeComptable(ActifsModel):
 
 
 class GroupeComptableRegional(ActifsModel):
-    id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
 
     class Meta:
@@ -217,7 +206,6 @@ class GroupeComptableRegional(ActifsModel):
 
 
 class GroupeComptableLocal(ActifsModel):
-    id = models.AutoField(primary_key=True)
     employe = models.ForeignKey('references.Employe', db_column='employe')
 
     class Meta:
@@ -231,8 +219,6 @@ class Discipline(ActifsModel):
     Une discipline est une catégorie de savoirs scientifiques.
     Le conseil scientifique fixe la liste des disciplines.
     """
-
-    id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
     nom_long = models.CharField(max_length=255, blank=True)
@@ -253,8 +239,6 @@ class Programme(ActifsModel):
     Structure interne par laquelle l'AUF exécute ses projets et activités,
     dispense ses produits et ses services.
     """
-
-    id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
     nom_long = models.CharField(max_length=255, blank=True)
@@ -283,8 +267,6 @@ class Projet(ActifsModel):
          "de la connaissance"),
         ('4', "Direction du renforcement des capacités scientifiques"),
     )
-
-    id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
     presentation = models.TextField(null=True, blank=True)
@@ -316,7 +298,6 @@ class Projet(ActifsModel):
 class ProjetComposante(ActifsModel):
     """Composantes des projets (source: programmation-quadriennalle)
     """
-    id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=10)
     nom = models.CharField(max_length=255)
     nom_court = models.CharField(max_length=255, null=True, blank=True)
@@ -335,7 +316,6 @@ class ProjetComposante(ActifsModel):
 class UniteProjet(ActifsModel):
     """Unités de projet (source: programmation-quadriennalle)
     """
-    id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=10, unique=True)
     nom = models.CharField(max_length=255)
 
@@ -349,7 +329,6 @@ class UniteProjet(ActifsModel):
 
 
 class ObjectifSpecifique(ActifsModel):
-    id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     objectif_strategique = models.ForeignKey('references.ObjectifStrategique',
                                              db_column='objectif_strategique')
@@ -364,7 +343,6 @@ class ObjectifSpecifique(ActifsModel):
 
 
 class ObjectifStrategique(ActifsModel):
-    id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
 
@@ -378,7 +356,6 @@ class ObjectifStrategique(ActifsModel):
 
 
 class Thematique(ActifsModel):
-    id = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
 
     class Meta:
@@ -394,7 +371,6 @@ class ProjetUp(ActifsModel):
     """Projet-unité de projet (source: coda)
        => codes budgétaires
     """
-    id = models.AutoField(primary_key=True)
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
     nom_court = models.CharField(max_length=255, blank=True)
@@ -408,8 +384,6 @@ class Poste(ActifsModel):
     Poste (donnée de référence, source: CODA).
     Un poste est une catégorie destinée à venir raffiner un projet.
     """
-
-    id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
     type = models.CharField(max_length=255, blank=True)
@@ -429,8 +403,6 @@ class ProjetPoste(ActifsModel):
     Un projet-poste consiste en une raffinement d'un projet par un poste
     (budgétaire).  Subdivision utile pour le suivi budgétaire et comptable.
     """
-
-    id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=255, unique=True)
     code_projet = models.ForeignKey(
         'references.Projet', to_field='code', db_column='code_projet'
