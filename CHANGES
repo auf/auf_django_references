@@ -1,3 +1,10 @@
+0.15 (2012-05-04)
+-----------------
+
+* Enlevé tous les champs id de la déclaration des modèles. Certains n'étaient
+  pas déclarés comme des AutoField, ce qui causait des problèmes. Maintenant,
+  Django se charge de les créer avec le bon type.
+
 0.14 (2012-05-03)
 -----------------
 
