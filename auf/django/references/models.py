@@ -644,6 +644,7 @@ class _Etablissement(ActifsModel):
 
     # Infos de base
     nom = models.CharField(max_length=255)
+    sigle = models.CharField(max_length=16, blank=True)
     pays = models.ForeignKey(
         'references.Pays', to_field='code', db_column='pays',
         related_name='+'
