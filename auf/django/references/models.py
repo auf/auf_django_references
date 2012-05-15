@@ -40,6 +40,11 @@ class Employe(ActifsModel):
     """
     Personne en contrat d'employé (CDD ou CDI) à l'AUF
     """
+    GENRE_CHOICES = (
+        (u'h', u'Homme'),
+        (u'f', u'Femme'),
+    )
+
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)
     implantation = models.ForeignKey(
@@ -53,7 +58,7 @@ class Employe(ActifsModel):
         related_name='lieu_travail_reel_de'
     )
     courriel = models.CharField(max_length=255, null=True, blank=True)
-    genre = models.CharField(max_length=3)
+    genre = models.CharField(max_length=3, choices=GENRE_CHOICES)
     fonction = models.CharField(max_length=255, null=True, blank=True)
     telephone_poste = models.CharField(max_length=255, null=True, blank=True)
     telephone_ip = models.CharField(max_length=255, null=True, blank=True)
@@ -90,7 +95,9 @@ class Employe(ActifsModel):
 
 
 class Authentification(ActifsModel):
-    """Authentification"""
+    """
+    Authentification
+    """
     id = models.ForeignKey(
         'references.Employe', primary_key=True, db_column='id'
     )
@@ -107,7 +114,8 @@ class Authentification(ActifsModel):
 
 
 class Service(ActifsModel):
-    """Services (donnée de référence, source: SGRH).
+    """
+    Services (donnée de référence, source: SGRH).
     """
     nom = models.CharField(max_length=255)
 
@@ -121,7 +129,8 @@ class Service(ActifsModel):
 
 
 class PosteType(ActifsModel):
-    """Postes types (donnée de référence, source: SGRH).
+    """
+    Postes types (donnée de référence, source: SGRH).
     """
     nom = models.CharField(max_length=255)
 
@@ -214,7 +223,8 @@ class GroupeComptableLocal(ActifsModel):
 
 
 class Discipline(ActifsModel):
-    """ ATTENTION: DÉSUET
+    """
+    ATTENTION: DÉSUET
     Discipline (donnée de référence, source: SQI).
     Une discipline est une catégorie de savoirs scientifiques.
     Le conseil scientifique fixe la liste des disciplines.
@@ -234,7 +244,8 @@ class Discipline(ActifsModel):
 
 
 class Programme(ActifsModel):
-    """ ATTENTION: DÉSUET
+    """
+    ATTENTION: DÉSUET
     Programme (donnée de référence, source: SQI).
     Structure interne par laquelle l'AUF exécute ses projets et activités,
     dispense ses produits et ses services.
@@ -255,18 +266,20 @@ class Programme(ActifsModel):
 #PROGRAMMATION QUADRIENNALLE
 
 class Projet(ActifsModel):
-    """Projet (donnée de référence, source: programmation-quadriennalle).
+    """
+    Projet (donnée de référence, source: programmation-quadriennalle).
     """
     SERVICE_CHOICES = (
-        ('1',
-         "Direction de la langue et de la communication scientifique "
-         "en français"),
-        ('2', "Direction du développement et de la valorisation"),
-        ('3',
-         "Direction de l'innovation pédagogique et de l'économie "
-         "de la connaissance"),
-        ('4', "Direction du renforcement des capacités scientifiques"),
+        (u'1',
+         u"Direction de la langue et de la communication scientifique "
+         u"en français"),
+        (u'2', u"Direction du développement et de la valorisation"),
+        (u'3',
+         u"Direction de l'innovation pédagogique et de l'économie "
+         u"de la connaissance"),
+        (u'4', u"Direction du renforcement des capacités scientifiques"),
     )
+
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
     presentation = models.TextField(null=True, blank=True)
@@ -296,7 +309,8 @@ class Projet(ActifsModel):
 
 
 class ProjetComposante(ActifsModel):
-    """Composantes des projets (source: programmation-quadriennalle)
+    """
+    Composantes des projets (source: programmation-quadriennalle)
     """
     code = models.CharField(max_length=10)
     nom = models.CharField(max_length=255)
@@ -314,7 +328,8 @@ class ProjetComposante(ActifsModel):
 
 
 class UniteProjet(ActifsModel):
-    """Unités de projet (source: programmation-quadriennalle)
+    """
+    Unités de projet (source: programmation-quadriennalle)
     """
     code = models.CharField(max_length=10, unique=True)
     nom = models.CharField(max_length=255)
@@ -330,8 +345,9 @@ class UniteProjet(ActifsModel):
 
 class ObjectifSpecifique(ActifsModel):
     nom = models.CharField(max_length=255)
-    objectif_strategique = models.ForeignKey('references.ObjectifStrategique',
-                                             db_column='objectif_strategique')
+    objectif_strategique = models.ForeignKey(
+        'references.ObjectifStrategique', db_column='objectif_strategique'
+    )
 
     class Meta:
         db_table = u'ref_objectif_specifique'
@@ -368,8 +384,9 @@ class Thematique(ActifsModel):
 
 
 class ProjetUp(ActifsModel):
-    """Projet-unité de projet (source: coda)
-       => codes budgétaires
+    """
+    Projet-unité de projet (source: coda)
+    => codes budgétaires
     """
     code = models.CharField(max_length=255, unique=True)
     nom = models.CharField(max_length=255)
@@ -380,7 +397,8 @@ class ProjetUp(ActifsModel):
 
 
 class Poste(ActifsModel):
-    """ ATTENTION: DÉSUET
+    """
+    ATTENTION: DÉSUET
     Poste (donnée de référence, source: CODA).
     Un poste est une catégorie destinée à venir raffiner un projet.
     """
@@ -426,7 +444,8 @@ class ProjetPoste(ActifsModel):
 
 
 class Region(ActifsModel):
-    """Région (donnée de référence, source: referentiels_spip).
+    """
+    Région (donnée de référence, source: referentiels_spip).
     Une région est une subdivision géographique du monde pour la gestion de
     l'AUF.
     """
@@ -605,6 +624,17 @@ class Pays(ActifsModel):
 
     Liste AUF basée sur la liste ISO-3166-1.
     """
+    NORD_SUD_CHOICES = (
+        (u'Nord', u'Nord'),
+        (u'Sud', u'Sud'),
+    )
+    DEVELOPPEMENT_CHOICES = (
+        (u'Elevé', u'Elevé'),
+        (u'Faible', u'Faible'),
+        (u'Intermédiaire', u'Intermédiaire'),
+        (u'inconnu', u'Inconnu'),
+    )
+
     code = models.CharField(max_length=2, unique=True)
     code_iso3 = models.CharField(max_length=3, unique=True)
     nom = models.CharField(max_length=255)
@@ -612,7 +642,9 @@ class Pays(ActifsModel):
     code_bureau = models.ForeignKey('references.Bureau', to_field='code',
                                     db_column='code_bureau', blank=True,
                                     null=True)
-    nord_sud = models.CharField(max_length=255, blank=True, null=True)
+    nord_sud = models.CharField(
+        max_length=255, blank=True, null=True,
+    )
     developpement = models.CharField(max_length=255, blank=True, null=True)
     monnaie = models.CharField(max_length=255, blank=True, null=True)
 
@@ -631,7 +663,7 @@ class _Etablissement(ActifsModel):
     """
     Superclasse pour les modèles ``Etablissement`` et ``EtablissementBase``
     """
-    MEMBRE_STATUT_CHOICES = (
+    STATUT_CHOICES = (
         ('T', 'Titulaire'),
         ('A', 'Associé'),
         ('C', 'Candidat'),
@@ -662,13 +694,16 @@ class _Etablissement(ActifsModel):
 
     # Membership
     membre = models.BooleanField()
-    membre_adhesion_date = models.DateField(null=True, blank=True,
-                                            verbose_name="date d'adhésion")
-    statut = models.CharField(max_length=1, choices=MEMBRE_STATUT_CHOICES,
-                              blank=True, null=True)
-    qualite = models.CharField(max_length=3, choices=QUALITE_CHOICES,
-                               verbose_name="qualité", blank=True,
-                               null=True)
+    membre_adhesion_date = models.DateField(
+        null=True, blank=True, verbose_name="date d'adhésion"
+    )
+    statut = models.CharField(
+        max_length=1, choices=STATUT_CHOICES, blank=True, null=True
+    )
+    qualite = models.CharField(
+        max_length=3, choices=QUALITE_CHOICES, verbose_name="qualité",
+        blank=True, null=True
+    )
 
     # Responsable
     responsable_genre = models.CharField(
