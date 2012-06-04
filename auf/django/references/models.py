@@ -714,6 +714,7 @@ class _Etablissement(ActifsModel):
     responsable_fonction = models.CharField(
         u'fonction', max_length=255, blank=True
     )
+    responsable_courriel = models.EmailField(u'courriel', blank=True)
 
     # Adresse
     adresse = models.CharField(max_length=255, blank=True)
