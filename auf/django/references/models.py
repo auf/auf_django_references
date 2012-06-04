@@ -695,46 +695,42 @@ class _Etablissement(ActifsModel):
     # Membership
     membre = models.BooleanField()
     membre_adhesion_date = models.DateField(
-        null=True, blank=True, verbose_name="date d'adhésion"
+        u"date d'adhésion", null=True, blank=True
     )
     statut = models.CharField(
         max_length=1, choices=STATUT_CHOICES, blank=True, null=True
     )
     qualite = models.CharField(
-        max_length=3, choices=QUALITE_CHOICES, verbose_name="qualité",
-        blank=True, null=True
+        u'qualité', max_length=3, choices=QUALITE_CHOICES, blank=True,
+        null=True
     )
 
     # Responsable
-    responsable_genre = models.CharField(
-        max_length=1, blank=True, verbose_name='genre'
-    )
-    responsable_nom = models.CharField(
-        max_length=255, blank=True, verbose_name='nom'
-    )
+    responsable_genre = models.CharField(u'genre', max_length=1, blank=True)
+    responsable_nom = models.CharField(u'nom', max_length=255, blank=True)
     responsable_prenom = models.CharField(
-        max_length=255, blank=True, verbose_name='prénom'
+        u'prénom', max_length=255, blank=True
     )
     responsable_fonction = models.CharField(
-        max_length=255, blank=True, verbose_name='fonction'
+        u'fonction', max_length=255, blank=True
     )
 
     # Adresse
     adresse = models.CharField(max_length=255, blank=True)
-    code_postal = models.CharField(max_length=20, blank=True,
-                                   verbose_name='code postal')
-    cedex = models.CharField(max_length=20, blank=True, verbose_name='CEDEX')
+    code_postal = models.CharField(u'code postal', max_length=20, blank=True)
+    cedex = models.CharField(u'CEDEX', max_length=20, blank=True)
     ville = models.CharField(max_length=255, blank=True)
     province = models.CharField(max_length=255, blank=True)
-    telephone = models.CharField(max_length=255, blank=True,
-                                 verbose_name='téléphone')
+    telephone = models.CharField(u'téléphone', max_length=255, blank=True)
     fax = models.CharField(max_length=255, blank=True)
-    url = models.URLField(verify_exists=False, max_length=255, null=True,
-                          blank=True, verbose_name='URL')
+    url = models.URLField(
+        u'URL', verify_exists=False, max_length=255, blank=True
+    )
 
     # Meta-données
-    date_modification = models.DateField(verbose_name='date de modification',
-                                         blank=True, null=True)
+    date_modification = models.DateField(
+        u'date de modification', blank=True, null=True
+    )
     commentaire = models.TextField(blank=True)
 
     class Meta:
