@@ -91,7 +91,7 @@ class Employe(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return u"%s, %s [%d]" % (self.nom, self.prenom, self.id)
+        return u"%s, %s" % (self.nom, self.prenom)
 
 
 class Authentification(ActifsModel):
@@ -110,7 +110,7 @@ class Authentification(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return u"%s [%d]" % (self.courriel, self.id)
+        return self.courriel
 
 
 class Service(ActifsModel):
@@ -125,7 +125,7 @@ class Service(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s (%s)" % (self.nom, self.id)
+        return self.nom
 
 
 class PosteType(ActifsModel):
@@ -139,7 +139,7 @@ class PosteType(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s (%s)" % (self.nom, self.id)
+        return self.nom
 
 
 class GroupeArh(ActifsModel):
@@ -240,7 +240,7 @@ class Discipline(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s - %s" % (self.code, self.nom)
+        return self.nom
 
 
 class Programme(ActifsModel):
@@ -260,7 +260,7 @@ class Programme(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s - %s" % (self.code, self.nom)
+        return self.nom
 
 
 #PROGRAMMATION QUADRIENNALLE
@@ -440,7 +440,7 @@ class ProjetPoste(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s" % (self.code)
+        return self.code
 
 
 class Region(ActifsModel):
@@ -464,7 +464,7 @@ class Region(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s (%s)" % (self.nom, self.code)
+        return self.nom
 
 
 class Bureau(ActifsModel):
@@ -498,7 +498,7 @@ class Bureau(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s (%s)" % (self.nom, self.code)
+        return self.nom
 
 
 class Implantation(ActifsModel):
@@ -615,7 +615,7 @@ class Implantation(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s (%d)" % (self.nom, self.id)
+        return self.nom
 
 
 class Pays(ActifsModel):
@@ -656,7 +656,7 @@ class Pays(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s (%s)" % (self.nom, self.code)
+        return self.nom
 
 
 class _Etablissement(ActifsModel):
