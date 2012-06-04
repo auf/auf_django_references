@@ -9,6 +9,8 @@ import auf.django.references.models
 def post_syncdb(sender, **kwargs):
     """Création des vues vers datamaster."""
 
+    verbosity = kwargs.get('verbosity', 1)
+
     # On ne crée des vues que si on est sur une BD MySQL.
     # L'attribut db.connection.vendor n'est présent qu'à partir de Django
     # 1.3
@@ -34,10 +36,13 @@ def post_syncdb(sender, **kwargs):
     datamaster_tables.difference_update(my_tables)
 
     # On peut maintenant créer les vues
+    if verbosity > 0:
+        print u"Création des vues vers datamaster"
     cursor = db.connection.cursor()
     schema = db.connection.settings_dict['NAME']
     for table in datamaster_tables:
-        print u"Création d'une vue vers datamaster.%s" % table
+        if verbosity > 1:
+            print u"Création d'une vue vers datamaster.%s" % table
         cursor.execute(
             'CREATE OR REPLACE VIEW `%s` AS SELECT * FROM datamaster.`%s`' %
             (table, table)
