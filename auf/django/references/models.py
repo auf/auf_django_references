@@ -60,8 +60,9 @@ class Employe(ActifsModel):
     courriel = models.CharField(max_length=255, null=True, blank=True)
     genre = models.CharField(max_length=3, choices=GENRE_CHOICES)
     fonction = models.CharField(max_length=255, null=True, blank=True)
-    telephone_poste = models.CharField(max_length=255, null=True, blank=True)
-    telephone_ip = models.CharField(max_length=255, null=True, blank=True)
+    telephone_poste = models.CharField(max_length=255, blank=True)
+    telephone_ip = models.CharField(max_length=255, blank=True)
+    telephone_ip_nomade = models.CharField(max_length=255, blank=True)
     responsable = models.ForeignKey(
         'references.Employe',
         db_column='responsable',
