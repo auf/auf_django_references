@@ -468,6 +468,28 @@ class Region(ActifsModel):
         return self.nom
 
 
+class ZoneAdministrative(ActifsModel):
+    """
+    Les implantations sont classées par zone administrative pour fins de
+    ressources humaines et de comptabilité. Pour les implantations
+    régionales, la zone administrative est équivalente à la région. Pour les
+    services centraux, la zone administrative est soit "Services centraux
+    Montréal" ou "Services centraux Paris".
+    """
+    code = models.CharField(max_length=4, primary_key=True)
+    nom = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'ref_zoneadministrative'
+        ordering = ['nom']
+        verbose_name = u'zone administrative'
+        verbose_name_plural = u'zones administratives'
+        managed = MANAGED
+
+    def __unicode__(self):
+        return self.nom
+
+
 class Bureau(ActifsModel):
     """
     Bureau (donnée de référence, source: SQI).
@@ -525,6 +547,7 @@ class Implantation(ActifsModel):
         'references.Implantation', db_column='bureau_rattachement'
     )
     region = models.ForeignKey('references.Region', db_column='region')
+    zone_administrative = models.ForeignKey('references.ZoneAdministrative')
     fuseau_horaire = models.CharField(max_length=255, blank=True)
     code_meteo = models.CharField(max_length=255, blank=True)
     # responsable
