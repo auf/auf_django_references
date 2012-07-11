@@ -174,7 +174,6 @@ class GroupeRespImplantation(ActifsModel):
     implantation = models.ForeignKey(
         'references.Implantation', db_column='implantation'
     )
-    type = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         db_table = u'ref_groupe_resp_implantation'
