@@ -714,6 +714,18 @@ class _Etablissement(ActifsModel):
     )
     description = models.TextField(blank=True)
     historique = models.TextField(blank=True)
+    nombre_etudiants = models.PositiveIntegerField(
+        u"nombre d'étudiants", blank=True, null=True
+    )
+    nombre_chercheurs = models.PositiveIntegerField(
+        u"nombre de chercheurs", blank=True, null=True
+    )
+    nombre_enseignants = models.PositiveIntegerField(
+        u"nombre d'enseignants", blank=True, null=True
+    )
+    nombre_membres = models.PositiveIntegerField(
+        u"nombre de membres", blank=True, null=True
+    )
 
     # Membership
     membre = models.BooleanField()

@@ -1,3 +1,9 @@
+0.22 (2012-07-18)
+-----------------
+
+* Ajouté les champs ``nombre_etudiants``, ``nombre_chercheurs``,
+  ``nombre_enseignants`` et ``nombre_membres`` au modèle des établissements.
+
 0.21 (2012-07-10)
 -----------------
 
