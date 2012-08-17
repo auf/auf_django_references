@@ -1,12 +1,14 @@
 # encoding: utf-8
 
 from django import db
-from django.db.models import signals
+from django.db.models.signals import post_syncdb
+from django.dispatch import receiver
 
 import auf.django.references.models
 
 
-def post_syncdb(sender, **kwargs):
+@receiver(post_syncdb, sender=auf.django.references.models)
+def creer_vues(sender, **kwargs):
     """Création des vues vers datamaster."""
 
     verbosity = kwargs.get('verbosity', 1)
@@ -38,8 +40,6 @@ def post_syncdb(sender, **kwargs):
     # On peut maintenant créer les vues
     if verbosity > 0:
         print u"Création des vues vers datamaster"
-    cursor = db.connection.cursor()
-    schema = db.connection.settings_dict['NAME']
     for table in datamaster_tables:
         if verbosity > 1:
             print u"Création d'une vue vers datamaster.%s" % table
@@ -48,19 +48,50 @@ def post_syncdb(sender, **kwargs):
             (table, table)
         )
 
-        # Vérifions s'il y a des foreign keys vers cette vue.
-        cursor.execute(
-            '''
-            SELECT TABLE_NAME, CONSTRAINT_NAME
-            FROM information_schema.REFERENTIAL_CONSTRAINTS
-            WHERE CONSTRAINT_SCHEMA = %s AND REFERENCED_TABLE_NAME = %s
-            ''',
-            (schema, table)
-        )
-        for row in cursor:
-            db.connection.cursor().execute(
-                'ALTER TABLE %s DROP FOREIGN KEY %s' % row
+
+@receiver(post_syncdb)
+def supprimer_cles_etrangeres(sender, **kwargs):
+    """
+    Supprime les contraintes de clé étrangère qui pointent vers les vues de
+    datamaster.
+    """
+    verbosity = kwargs.get('verbosity', 1)
+
+    # Tout ça ne s'applique qu'à des BDs MySQL.  L'attribut
+    # db.connection.vendor n'est présent qu'à partir de Django 1.3
+    if (hasattr(db.connection, 'vendor')
+        and db.connection.vendor != 'mysql') or \
+       'mysql' not in db.backend.__name__:
+        return
+
+    # Cherchons toute foreign key qui pointe vers une vue d'une table de
+    # référence.
+    cursor = db.connection.cursor()
+    cursor.execute(
+        """
+        SELECT c.CONSTRAINT_SCHEMA, c.TABLE_NAME, c.CONSTRAINT_NAME
+        FROM
+            information_schema.REFERENTIAL_CONSTRAINTS c
+            INNER JOIN information_schema.VIEWS v
+                ON v.TABLE_SCHEMA = c.CONSTRAINT_SCHEMA
+                AND v.TABLE_NAME = c.REFERENCED_TABLE_NAME
+        WHERE c.REFERENCED_TABLE_NAME LIKE 'ref\\_%%'
+        """
+    )
+    for schema, table, constraint in cursor:
+        if verbosity > 0:
+            print "Suppression de la contrainte %s sur la table %s.%s..." % (
+                constraint, schema, table
             )
+        db.connection.cursor().execute(
+            'ALTER TABLE `%s`.`%s` DROP FOREIGN KEY `%s`' %
+            (schema, table, constraint)
+        )
 
-
-signals.post_syncdb.connect(post_syncdb, sender=auf.django.references.models)
+# Supprimer les clés étrangères aussi après un migrate
+try:
+    from south.signals import post_migrate
+except ImportError:
+    pass
+else:
+    post_migrate.connect(supprimer_cles_etrangeres)

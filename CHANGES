@@ -1,3 +1,9 @@
+0.23 (2012-08-17)
+-----------------
+
+* Suppression automatique des contraintes de clé étrangère vers les vues de
+  datamasteraprès un syncdb et un migrate.
+
 0.22 (2012-07-18)
 -----------------
 
