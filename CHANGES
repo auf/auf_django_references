@@ -1,3 +1,9 @@
+0.24 (2012-10-31)
+-----------------
+
+* le __unicode__ d'Etablissement n'affiche que le code du pays pour 
+  ne pas faire faire une autre requête pour charger le Pays. 
+
 0.23 (2012-08-17)
 -----------------
 

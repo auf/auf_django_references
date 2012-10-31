@@ -775,7 +775,7 @@ class _Etablissement(ActifsModel):
         managed = MANAGED
 
     def __unicode__(self):
-        return "%s - %s" % (self.pays.nom, self.nom)
+        return "%s - %s" % (self.pays_id, self.nom)
 
 
 class Etablissement(_Etablissement):
