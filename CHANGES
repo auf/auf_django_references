@@ -1,3 +1,12 @@
+0.25 (2013-05-03)
+-----------------
+
+* supprimé verify_exists pour les URLField car incompatible avec
+  Django 1.5
+* Implantation.bureau_rattachement accepte blank et null sinon 
+  incompatible avec InnoDB (FK circulaire)
+
+
 0.24 (2012-10-31)
 -----------------
 

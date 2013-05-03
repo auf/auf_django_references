@@ -543,7 +543,8 @@ class Implantation(ActifsModel):
     nom_long = models.CharField(max_length=255, blank=True)
     type = models.CharField(max_length=255)
     bureau_rattachement = models.ForeignKey(
-        'references.Implantation', db_column='bureau_rattachement'
+        'references.Implantation', db_column='bureau_rattachement',
+        null=True, blank=True
     )
     region = models.ForeignKey('references.Region', db_column='region')
     zone_administrative = models.ForeignKey('references.ZoneAdministrative')
@@ -605,7 +606,7 @@ class Implantation(ActifsModel):
     fax_interne = models.CharField(max_length=255, blank=True)
     courriel = models.EmailField(blank=True)
     courriel_interne = models.EmailField(blank=True)
-    url = models.URLField(verify_exists=False, max_length=255, blank=True)
+    url = models.URLField(max_length=255, blank=True)
     # traitement
     statut = models.IntegerField(choices=STATUT_CHOICES)
     date_ouverture = models.DateField(null=True, blank=True)
@@ -760,7 +761,7 @@ class _Etablissement(ActifsModel):
     telephone = models.CharField(u'téléphone', max_length=255, blank=True)
     fax = models.CharField(max_length=255, blank=True)
     url = models.URLField(
-        u'URL', verify_exists=False, max_length=255, blank=True
+        u'URL', max_length=255, blank=True
     )
 
     # Meta-données
