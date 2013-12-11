@@ -39,10 +39,10 @@ def creer_vues(sender, **kwargs):
 
     # On peut maintenant créer les vues
     if verbosity > 0:
-        print u"Création des vues vers datamaster"
+        print "Création des vues vers datamaster"
     for table in datamaster_tables:
         if verbosity > 1:
-            print u"Création d'une vue vers datamaster.%s" % table
+            print "Création d'une vue vers datamaster.%s" % table
         cursor.execute(
             'CREATE OR REPLACE VIEW `%s` AS SELECT * FROM datamaster.`%s`' %
             (table, table)
