@@ -37,6 +37,7 @@ class EtablissementForm(forms.ModelForm):
 
     class Meta:
         model = ref.EtablissementBase
+        exclude = ()
 
     class Media:
         css = {
