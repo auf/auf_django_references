@@ -8,13 +8,13 @@ DATABASES = {
 }
 
 INSTALLED_APPS = (
-    'auf.django.references',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.staticfiles',
+    'auf.django.references',
     'tests.universite',
     'tests.simpletests',
 )
