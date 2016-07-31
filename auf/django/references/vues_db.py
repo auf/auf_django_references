@@ -6,6 +6,14 @@ def creer_vues(sender, **kwargs):
 
     verbosity = kwargs.get('verbosity', 1)
 
+    # On ne crée des vues que si on est sur une BD MySQL.
+    # L'attribut db.connection.vendor n'est présent qu'à partir de Django
+    # 1.3
+    if hasattr(db.connection, 'vendor') and db.connection.vendor != 'mysql':
+        return
+
+
+
     cursor = db.connection.cursor()
 
     # Vérifions qu'on a une BD qui s'appelle 'datamaster'
