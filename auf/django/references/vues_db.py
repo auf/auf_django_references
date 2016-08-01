@@ -52,8 +52,7 @@ def supprimer_cles_etrangeres(sender, **kwargs):
     # Tout ça ne s'applique qu'à des BDs MySQL.  L'attribut
     # db.connection.vendor n'est présent qu'à partir de Django 1.3
     if (hasattr(db.connection, 'vendor')
-        and db.connection.vendor != 'mysql') or \
-       'mysql' not in db.backend.__name__:
+        and db.connection.vendor != 'mysql'):
         return
 
     # Cherchons toute foreign key qui pointe vers une vue d'une table de
