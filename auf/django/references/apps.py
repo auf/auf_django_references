@@ -10,5 +10,5 @@ class ReferencesConfig(AppConfig):
     # noinspection PyMethodMayBeStatic
     def ready(self):
         from . import vues_db
-        pre_migrate.connect(vues_db.creer_vues, sender=self)
+        post_migrate.connect(vues_db.creer_vues, sender=self)
         post_migrate.connect(vues_db.supprimer_cles_etrangeres, sender=self)
