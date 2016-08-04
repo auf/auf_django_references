@@ -191,7 +191,8 @@ class GroupeDirProgramme(ActifsModel):
 
 class GroupeDirDelegProgrammeReg(ActifsModel):
     employe = models.ForeignKey('references.Employe', db_column='employe')
-    region = models.ForeignKey('references.Region', db_column='region')
+    region = models.ForeignKey('references.Region', db_column='region',
+                               null=True)
 
     class Meta:
         db_table = u'ref_groupe_dir_deleg_programme_reg'
@@ -414,35 +415,6 @@ class Poste(ActifsModel):
         return "%s - %s (%s)" % (self.code, self.nom, self.type)
 
 
-class ProjetPoste(ActifsModel):
-    """
-    ATTENTION: DÉSUET
-    Projet-poste (donnée de référence, source: CODA).
-    Un projet-poste consiste en une raffinement d'un projet par un poste
-    (budgétaire).  Subdivision utile pour le suivi budgétaire et comptable.
-    """
-    code = models.CharField(max_length=255, unique=True)
-    code_projet = models.ForeignKey(
-        'references.Projet', to_field='code', db_column='code_projet'
-    )
-    code_poste = models.ForeignKey(
-        'references.Poste', to_field='code', db_column='code_poste'
-    )
-    code_bureau = models.ForeignKey(
-        'references.Bureau', to_field='code', db_column='code_bureau'
-    )
-    code_programme = models.ForeignKey(
-        'references.Programme', to_field='code', db_column='code_programme'
-    )
-
-    class Meta:
-        db_table = u'ref_projet_poste'
-        managed = MANAGED
-
-    def __unicode__(self):
-        return self.code
-
-
 class Region(ActifsModel):
     """
     Région (donnée de référence, source: referentiels_spip).
@@ -508,9 +480,10 @@ class Bureau(ActifsModel):
     nom_court = models.CharField(max_length=255, blank=True)
     nom_long = models.CharField(max_length=255, blank=True)
     implantation = models.ForeignKey(
-        'references.Implantation', db_column='implantation'
+        'references.Implantation', db_column='implantation', null=True
     )
-    region = models.ForeignKey('references.Region', db_column='region')
+    region = models.ForeignKey('references.Region', db_column='region',
+                               null=True)
 
     class Meta:
         db_table = u'ref_bureau'
@@ -662,7 +635,8 @@ class Pays(ActifsModel):
     code = models.CharField(max_length=2, unique=True)
     code_iso3 = models.CharField(max_length=3, unique=True)
     nom = models.CharField(max_length=255)
-    region = models.ForeignKey('references.Region', db_column='region')
+    region = models.ForeignKey('references.Region', db_column='region',
+                               null=True)
     code_bureau = models.ForeignKey('references.Bureau', to_field='code',
                                     db_column='code_bureau', blank=True,
                                     null=True)

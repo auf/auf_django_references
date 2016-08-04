@@ -1,6 +1,13 @@
 # -*- encoding: utf-8 -*-
 from django import db
 
+"""Conservé pour compatibilité avec les plus anciennes applications mais la
+façon de faire désormais est de créer les tables comme toute autre application
+et de les synchroniser par l'entrepôt de données.
+
+"""
+
+
 def creer_vues(sender, **kwargs):
     """Création des vues vers datamaster."""
 
