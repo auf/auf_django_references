@@ -104,7 +104,7 @@ class Authentification(ActifsModel):
     """
     Authentification
     """
-    id = models.ForeignKey(
+    id = models.OneToOneField(
         'references.Employe', primary_key=True, db_column='id'
     )
     courriel = models.CharField(max_length=255, unique=True)
