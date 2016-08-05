@@ -3,7 +3,12 @@
 from django.conf import settings
 from django.db import models
 
-MANAGED = getattr(settings, 'AUF_REFERENCES_MANAGED', False)
+import django
+
+if django.VERSION[0:2] < (1, 7):
+    MANAGED = getattr(settings, 'AUF_REFERENCES_MANAGED', False)
+else:
+    MANAGED = True
 
 
 ### Gestion des actifs/inactifs
