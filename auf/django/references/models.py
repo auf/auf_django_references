@@ -420,6 +420,35 @@ class Poste(ActifsModel):
         return "%s - %s (%s)" % (self.code, self.nom, self.type)
 
 
+class ProjetPoste(ActifsModel):
+    """
+    ATTENTION: DÉSUET
+    Projet-poste (donnée de référence, source: CODA).
+    Un projet-poste consiste en une raffinement d'un projet par un poste
+    (budgétaire).  Subdivision utile pour le suivi budgétaire et comptable.
+    """
+    code = models.CharField(max_length=255, unique=True)
+    code_projet = models.ForeignKey(
+        'references.Projet', to_field='code', db_column='code_projet'
+    )
+    code_poste = models.ForeignKey(
+        'references.Poste', to_field='code', db_column='code_poste'
+    )
+    code_bureau = models.ForeignKey(
+        'references.Bureau', to_field='code', db_column='code_bureau'
+    )
+    code_programme = models.ForeignKey(
+        'references.Programme', to_field='code', db_column='code_programme'
+    )
+
+    class Meta:
+        db_table = u'ref_projet_poste'
+        managed = MANAGED
+
+    def __unicode__(self):
+        return self.code
+
+
 class Region(ActifsModel):
     """
     Région (donnée de référence, source: referentiels_spip).
